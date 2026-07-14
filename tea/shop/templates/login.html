@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body_class %}auth-mode{% endblock %}
+
+{% block content %}
+<div id="auth-wrapper" class="glass-panel form-wrapper fade-in">
+    <div id="login-section" class="form-section active">
+        <h2>Welcome Back</h2>
+        <form method="POST" action="{% url 'login' %}"> 
+            {% csrf_token %}
+            <input type="hidden" name="action" value="login">
+            <div class="input-group">
+                <input type="email" id="loginEmail" name="email" required autocomplete="off">
+                <label for="loginEmail">Email Address</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="loginPassword" name="password" required>
+                <label for="loginPassword">Password</label>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <div class="toggle-links">
+            <p>New here? <span onclick="switchAuthForm('signup-section')">Create an Account</span></p>
+        </div>
+        <div class="message-box"></div>
+    </div>
+
+    <div id="signup-section" class="form-section hidden">
+        <h2>Join the Club</h2>
+        <form method="POST"  action="{% url 'login'}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="signup">
+            <div class="input-group">
+                <input type="text" id="signupName" name="name" required autocomplete="off">
+                <label for="signupName">Full Name</label>
+            </div>
+            <div class="input-group">
+                <input type="email" id="signupEmail" name="email" required autocomplete="off">
+                <label for="signupEmail">Email Address</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="signupPassword" name="password" required>
+                <label for="signupPassword">Password</label>
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="toggle-links">
+            <p>Already have an account? <span onclick="switchAuthForm('login-section')">Log In</span></p>
+        </div>
+        <div class="message-box"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="order-form-wrapper" class="glass-panel form-wrapper fade-in" style="margin: 40px auto;">
+    <h2>Delivery Details</h2>
+    <p id="selected-tea-display" style="text-align: center; color: #1dd1a1; font-weight: bold; margin-bottom: 20px; font-size: 1.2em;"></p>
+    
+    <form method="POST" action="{% url 'order' %}">
+        {% csrf_token %}
+        <input type="hidden" id="orderedTeaName" name="item_name">
+
+        <div class="input-group">
+            <input type="text" id="customerName" name="customer_name" required autocomplete="off">
+            <label for="customerName">Full Name</label>
+        </div>
+        <div class="input-group">
+            <input type="tel" id="customerNumber" name="mobile" maxlength="10"  pattern="[0-9]{10}" oniput="this.value.replace(/[^0-9]/g,'')" required autocomplete="off">
+            <label for="customerNumber">Phone Number</label>
+        </div>
+        <div class="input-group">
+            <label for="tableNumber">Table Number</label>
+
+            <select id="tableNumber">
+                <option value="">Select Table</option>
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+                <option value="5">Table 5</option>
+                <option value="6">Table 6</option>
+                <option value="7">Table 7</option>
+                <option value="8">Table 8</option>
+                <option value="9">Table 9</option>
+                <option value="10">Table 10</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <textarea id="customerLocation" name="delivery_address" rows="3" required></textarea>
+            <label for="customerLocation">Delivery Address / Location</label>
+        </div>
+        
+        <button type="submit" class="btn">Continue to Payment</button>
+        <a href="{% url 'cart' %}" class="btn btn-secondary" style="display: block; text-align: center; text-decoration: none;">Back to Cart</a>
+    </form>
+    <div class="message-box" id="order-message"></div>
+</div>
+{% endblock %}

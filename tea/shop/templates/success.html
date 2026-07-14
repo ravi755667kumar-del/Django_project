@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success - Brew Haven</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="tea-mode">
+    <div class="glass-panel form-wrapper fade-in" style="margin-top: 100px;">
+        <h2>Order Confirmed! 🎉</h2>
+        <p style="margin: 20px 0; font-size: 1.1em;">Thank you for choosing Brew Haven. Your tea is being prepared and will be out for delivery shortly.</p>
+        
+        <a href="{% url 'menu' %}" class="btn" style="text-decoration: none; display: block; text-align: center;">Order More</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body_class %}tea-mode{% endblock %}
+
+{% block content %}
+
+<div class="glass-panel cart-container">
+
+    <h1>🛒 Your Cart</h1>
+
+    <!-- Table Header -->
+    <div class="cart-header">
+        <span>Item</span>
+        <span>Quantity</span>
+        <span>Price</span>
+        <span>Total</span>
+    </div>
+
+    <!-- JavaScript will add items here -->
+    <div id="cart-items-container">
+
+    </div>
+
+    <hr>
+    <div class="cart-summary">
+        <h2>
+            Grand Total : ₹
+            <span id="cart-total-price">0</span>
+        </h2>
+    </div>
+
+    <div class="cart-buttons">
+
+        <a href="{% url 'login' %}" class="btn btn-secondary">
+            Continue Shopping
+        </a>
+
+        <a href="{% url 'order' %}" class="btn">
+            Proceed to Checkout
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

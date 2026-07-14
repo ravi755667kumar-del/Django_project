@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Brew Haven</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="tea-mode">
+    <div class="glass-panel form-wrapper fade-in" style="margin-top: 50px;">
+     
+        <h2>Scan & Pay 📲</h2>
+        
+        <img src="{% static 'images/payment_qr.jpeg' %}" 
+             alt="Payment QR Code"
+             width="200"
+             height="200">
+        
+        <p>Please scan the QR code below to complete your payment.</p>
+        
+        <form action="{% url 'success' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="payment_status" value="completed">
+            
+            <button type="submit" class="btn">I Have Paid (Confirm Order)</button>
+            <a href="{% url 'order' %}" class="btn btn-secondary" style="text-decoration: none; display: block; text-align: center; margin-top: 10px;">Back</a>
+        </form>
+    </div>
+</body>
+</html>

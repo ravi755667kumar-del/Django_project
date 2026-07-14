@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block body_class %}tea-mode{% endblock %}
+
+
+{% block content %}
+<div class="content-wrapper" >
+    <div class="top-header" >
+        <div class="brand-logo">
+            <h1>🌿 Tea Brewan </h1>
+        </div>
+        <div class="user-welcome" >
+            welcome, <span>Guest</span>👋
+    </div>
+</div>
+    <div class="menu-bar">
+        <div class="menu-left">
+            <button id="hot-btn" class="active-tab" onclick="showCategory('hot')">🔥 Hot Drinks</button>
+            <button id="cold-btn" onclick="showCategory('cold')">❄️ Cold Drinks</button>
+            <button id="snack-btn" onclick="showCategory('snack')">🍔 Snacks</button>
+        </div>
+        <div class="menu-right">
+            <a href="{% url 'cart' %}" class="cart-btn" style="text-decoration:none; color:inherit;">🛒 Cart (<span id="cart-count">0</span>)</a>
+        </div>
+    </div>
+
+    <div id="hot-category" class="tea-grid">
+        {% for drink in hot_drinks %}
+        <div class="glass-panel tea-card">
+            <h3>{{ drink.name }}</h3>
+            <span class="tea-price">₹{{ drink.price }}</span>
+            <p>{{ drink.description }}</p>
+            <button class="cart-add-btn" onclick="addToCart('{{ drink.name }}', {{drink.price}})">➕</button>
+        </div>
+        {% endfor %}    
+    </div>
+
+    <div id="cold-category" class="tea-grid hidden" style="display: none;">
+        {% for drink in cold_drinks %}
+        <div class="glass-panel tea-card">
+            <h3>{{ drink.name }}</h3>
+            <span class="tea-price">₹{{ drink.price }}</span>
+            <p>{{ drink.description }}</p>
+            <button class="cart-add-btn" onclick="addToCart('{{ drink.name|escapejs }}', {{drink.price}})">➕</button>
+        </div>
+        {% endfor %}   
+    </div>
+    
+    <div id="snack-category" class="tea-grid hidden" style="display: none;">
+        {% for snack in snacks %}
+        <div class="glass-panel tea-card">
+            <h3>{{ snack.name }}</h3>
+            <span class="tea-price">₹{{ snack.price }}</span>
+            <p>{{ snack.description }}</p>
+            <button class="cart-add-btn" onclick="addToCart('{{ snack.name|escapejs }}', {{snack.price}})">➕</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
