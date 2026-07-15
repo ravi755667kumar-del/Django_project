@@ -87,7 +87,7 @@ def cart(request):
 
 def order(request):
     if request.method == "POST":
-        mobile = request.POST.get("mobile")
+        mobile = request.POST.get("customer_mobile")
         item_name = request.POST.get("item_name")
         quantity = request.POST.get("quantity")
         price = request.POST.get("price")
