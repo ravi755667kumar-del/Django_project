@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from .models import Customer,Drink,Snacks
 from .models import Order_data
+import json
 
 
 def menu(request):
@@ -86,22 +87,32 @@ def cart(request):
 
 
 def order(request):
+
     if request.method == "POST":
+
         mobile = request.POST.get("customer_mobile")
-        item_name = request.POST.get("item_name")
-        quantity = request.POST.get("quantity")
-        price = request.POST.get("price")
 
-        Order_data.objects.create(
-            mobile=mobile,
-            item_name=item_name,
-            quantity=quantity,
-            price=price
-        )
+        cart_data = request.POST.get("cart_data")
 
-        return redirect("payment.html")
+        cart = json.loads(cart_data)
 
-    return render(request,"order.html")
+        for item in cart:
+
+            Order_data.objects.create(
+
+                item_name=item["name"],
+
+                quantity=item["quantity"],
+
+                price=item["price"] * item["quantity"],
+
+                mobile=mobile
+
+            )
+
+        return redirect("payment")
+
+    return render(request, "order.html")
 def payment(request):
     return render(request, "payment.html")
 def success(request):

@@ -7,6 +7,7 @@
     
     <form method="POST" action="{% url 'order' %}">
         {% csrf_token %}
+        <input type="hidden" id="cartData" name="cart_data">
         <input type="hidden" id="orderedTeaName" name="item_name">
 
         <div class="input-group">
@@ -14,13 +15,13 @@
             <label for="customerName">Full Name</label>
         </div>
         <div class="input-group">
-            <input type="tel" id="customerNumber" name="mobile" maxlength="10"  pattern="[0-9]{10}" oniput="this.value.replace(/[^0-9]/g,'')" required autocomplete="off">
+            <input type="tel" id="customerNumber" name="customer_mobile" maxlength="10"  pattern="[0-9]{10}" oniput="this.value=this.value.replace(/[^0-9]/g,'')" required autocomplete="off">
             <label for="customerNumber">Phone Number</label>
         </div>
         <div class="table-group">
             <label for="tableNumber">Table Number</label>
 
-            <select id="tableNumber"  class="table-select" required>
+            <select id="tableNumber" name="table_number" class="table-select" required>
                 <option value="">Select Table</option>
                 <option value="1">Table 1</option>
                 <option value="2">Table 2</option>

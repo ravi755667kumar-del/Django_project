@@ -27,7 +27,7 @@
 
     <div id="signup-section" class="form-section hidden">
         <h2>Join the Club</h2>
-        <form method="POST"  action="{% url 'login'}">
+        <form method="POST"  action="{% url 'login'%}">
             {% csrf_token %}
             <input type="hidden" name="action" value="signup">
             <div class="input-group">

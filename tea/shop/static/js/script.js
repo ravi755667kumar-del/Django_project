@@ -232,3 +232,15 @@ function decreaseQuantity(index){
 }
 displayCart();
 
+// Send cart to Django
+document.addEventListener("DOMContentLoaded", function () {
+
+    const cartInput = document.getElementById("cartData");
+
+    if (cartInput) {
+
+        cartInput.value = JSON.stringify(cart);
+
+    }
+
+});
