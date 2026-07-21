@@ -17,11 +17,35 @@ body {
 }
 
 body.auth-mode {
-    background: linear-gradient(45deg, #1e3c72, #2a5298, #ff6b6b, #1dd1a1);
+    background: linear-gradient(#E56B6F);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
 }
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
 
+}
+
+.logo img{
+   /* background-color:#ff6b6b ;*/
+    width: 80px;
+    height: 80px;
+    margin-top: none;
+    top:0px;
+
+}
+nav{
+    display: flex;
+    gap:20px;
+}
+nav a{
+    text-decoration: none;
+    color:none;
+    font-size:18px;
+}
 body.tea-mode {
     background: url('https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
     align-items: flex-start;
