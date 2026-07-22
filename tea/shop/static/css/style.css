@@ -8,7 +8,6 @@
 
 body {
     min-height: 100vh;
-    display: flex;
     justify-content: center;
     align-items: center;
     transition: background 1.5s ease-in-out;
@@ -26,25 +25,106 @@ header{
     justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
+    width:100%;
+    box-sizing:border-box;
 
+}
+.logo{
+    display:flex;
+    align-items: center;
 }
 
 .logo img{
    /* background-color:#ff6b6b ;*/
     width: 80px;
     height: 80px;
-    margin-top: none;
-    top:0px;
+    object-fit:contain;
 
 }
 nav{
     display: flex;
-    gap:20px;
+    align-items: center;
+    gap:25px;
 }
 nav a{
     text-decoration: none;
     color:none;
     font-size:18px;
+    font-weight: 500;
+}
+#auth-wrapper{
+    position: fixed;
+    top: 0;
+    right: -50%;
+    width: 30%;
+    height: 100vh;
+    margin: 0;
+    padding: 30px;
+    background: rgba(169, 20, 20, 0.15);
+    backdrop-filter: blur(120px);
+    transition: 0.5s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 40px;
+
+}
+
+#auth-wrapper.active{
+    right:0;
+}
+.close-btn{
+    position:absolute;
+    top:20px;
+    right:25px;
+    font-size:30px;
+    cursor:pointer;
+}
+.hero{
+    text-align: center;
+    margin-top: 100px;
+    color:#fff;
+
+}
+.hero h1{
+    font-size:30 px;
+    margin-button:10px;
+
+}
+
+.hero p{
+    width: 500px;
+    text-align: center;
+    line-height:1.6;
+    margin: 30px auto 0;
+}
+.left-side-image{
+    position: absolute;
+    left: -260px;
+    top: 200px;
+    height: 250px;
+    border-radius: 250px;
+    overflow:hidden;
+}
+.left-side-image img{
+    width:100%;
+    height: 100%;
+    border-radius: 30%;
+    object-fit: cover;
+}
+.right-side-image{
+    position: absolute;
+    right: -220px;
+    top: 200px;
+    height: 250px;
+    border-radius: 250px;
+    overflow:hidden;
+}
+.right-side-image img{
+    width:100%;
+    height:100%;
+    border-radius: 30%;
+    margin-left: -30px;
+    object-fit: cover;
 }
 body.tea-mode {
     background: url('https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;

@@ -4,6 +4,12 @@ let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 // Update cart count when page loads
 updateCartCount();
+function openLogin(){
+    document.getElementById("auth-wrapper").classList.add("active");
+}
+function closeLogin(){
+    document.getElementById("auth-wrapper").classList.remove("active");
+}
 
 
 function switchAuthForm(targetId) {
