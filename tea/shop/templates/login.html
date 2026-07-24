@@ -29,6 +29,11 @@
 <div class="right-side-image">
     <img src="{% static 'images/right.png' %}" alt="Image">
 </div>
+<div class="downside-image">
+    <img class="down-img" src="{% static 'images/down.png' %}" alt="snacks" onclick="window.location.href='{% url 'menu' %}?category=snacks'">
+    <img class="down-img" src="{% static 'images/down2.png' %}" alt="hot" onclick="window.location.href='{% url 'menu' %}?category=hot'">
+    <img class="down-img" src="{% static 'images/down3.png' %}" alt="cold" onclick="window.location.href='{% url 'menu' %}?category=cold'">
+</div>
 <div id="auth-wrapper" class="glass-panel form-wrapper fade-in">
     <span class="close-btn" onclick="closeLogin()">&times;</span>
     <div id="login-section" class="form-section active">
