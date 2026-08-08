@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% block body_class %}tea-mode{% endblock %}
+
+
+{% block content %}
+<div class="content-wrapper" >
+
+    <div class="top-header" >
+
+        <div class="brand-logo">
+            <a href="{% url 'logout' %}" style="text-decoration: none; color: inherit;">
+                <h1>🌿 Tea Brewan </h1>
+            </a>
+        </div>
+
+        <!-- Recommendation Navbar Button -->
+        <nav class="main-nav">
+            <button class="rec-nav-btn" onclick="toggleRecommendation()" id="recNavBtn">
+                ✨ Recommendations
+            </button>
+        </nav>
+
+        <!-- Profile Dropdown in Upper Right -->
+        <div class="profile-menu">
+            <button class="profile-btn" onclick="toggleProfileDropdown()">
+                Welcome, <span>{{ customer_name }}</span> 👤 ▼
+            </button>
+            <div class="profile-dropdown" id="profileDropdown">
+                <a href="{% url 'order_history' %}">📦 Order History</a>
+                <a href="{% url 'logout' %}">🚪 Logout</a>
+                <a href="{% url 'delete_account' %}" style="color: #ff4757; border-top: 1px solid rgba(255,255,255,0.1);" onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone and will erase all your order history permanently.');">🗑️ Delete Account</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== RECOMMENDATION POPUP MODAL ===== -->
+    <div id="rec-overlay" onclick="closeRecommendation()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:9998; backdrop-filter:blur(4px);"></div>
+
+    <div id="rec-modal" class="premium-rec-modal">
+        <!-- Close button -->
+        <button class="rec-close-btn" onclick="closeRecommendation()">✕</button>
+
+        <div class="rec-modal-header">
+            <h2>✨ AI Recommendations</h2>
+            <p>Curated specifically for you based on current weather</p>
+        </div>
+
+        <div id="rec-list" class="rec-list-container">
+            <!-- Items injected by JS -->
+        </div>
+
+        <p class="rec-footer-text">Click any item to find it on the menu ↓</p>
+    </div>
+
+
+    <form class="search-menu">
+        <input type="text" id="searchBox" name="search" placeholder="Search menu">
+
+        <select id="priceFilter" name="price_filter">
+            <option value="">Filter by price</option>
+            <option value="low_high">Price: low→high</option>
+            <option value="high_low">Price: High→low</option>
+        </select>
+    </form>
+
+
+    <div id="menu-container">
+        {% include "menu_item.html" %}
+    </div>
+
+        <!-- ABOUT SECTION -->
+    <div id="about-section" class="custom-about-container">
+        
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <h1><i class="fas fa-mug-hot"></i> About Brew Haven</h1>
+            <p>Brewing Happiness, One Cup at a Time.</p>
+        </div>
+
+        <!-- About Welcome -->
+        <div class="about-card">
+            <h2><i class="fas fa-coffee"></i> Welcome to Brew Haven</h2>
+            <p>
+                At <strong>Brew Haven</strong>, we are passionate about delivering
+                exceptional coffee, premium teas, refreshing beverages, and
+                delicious snacks in a warm and welcoming environment.
+                Our mission is to combine quality ingredients, outstanding
+                customer service, and modern technology to create a memorable
+                café experience for everyone.
+            </p>
+            <p>
+                Whether you're stopping by for your morning coffee,
+                catching up with friends, or ordering online,
+                Brew Haven is committed to providing freshness,
+                quality, and convenience with every order.
+            </p>
+        </div>
+
+
+
+        <!-- Services -->
+        <div class="about-card">
+            <h2 class="center-text"><i class="fas fa-star"></i> What We Offer</h2>
+            <div class="about-grid-4 text-center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                <div class="offer-item">
+                    <i class="fas fa-mug-hot fa-3x mb-3"></i>
+                    <h4>Premium Coffee</h4>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-leaf fa-3x mb-3"></i>
+                    <h4>Premium Tea</h4>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-cookie-bite fa-3x mb-3"></i>
+                    <h4>Fresh Snacks</h4>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-robot fa-3x mb-3"></i>
+                    <h4>AI Chat Support</h4>
+                </div>
+                <div class="offer-item">
+                    <i class="fas fa-brain fa-3x mb-3"></i>
+                    <h4>Smart Recommendations</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Choose -->
+        <div class="about-card">
+            <h2><i class="fas fa-heart"></i> Why Choose Brew Haven?</h2>
+            <div class="about-grid-2">
+                <ul class="about-list">
+                    <li><i class="fas fa-check-circle"></i> Premium Quality Ingredients</li>
+                    <li><i class="fas fa-check-circle"></i> Freshly Prepared Food & Drinks</li>
+                    <li><i class="fas fa-check-circle"></i> Affordable Pricing</li>
+                    <li><i class="fas fa-check-circle"></i> Secure Online Payments</li>
+                </ul>
+                <ul class="about-list">
+                    <li><i class="fas fa-check-circle"></i> Fast Delivery Service</li>
+                    <li><i class="fas fa-check-circle"></i> Friendly Customer Support</li>
+                    <li><i class="fas fa-check-circle"></i> Machine Learning Menu</li>
+                    <li><i class="fas fa-check-circle"></i> Modern Online Ordering System</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Technology -->
+        <div class="about-card">
+            <h2><i class="fas fa-microchip"></i> Powered by Technology</h2>
+            <p>
+                Brew Haven leverages modern web technologies, an
+                AI-powered chatbot, and a custom <strong>Machine Learning Recommendation Engine</strong>. 
+                Our AI analyzes live weather patterns, time of day, and historical order data to instantly curate the perfect menu items specifically for you.
+            </p>
+        </div>
+
+        <!-- Contact -->
+        <div class="about-card center-text">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <p>We'd love to hear from you.</p>
+            
+            <div class="contact-details">
+                <div>
+                    <h4>Email</h4>
+                    <p>support@brewhaven.com</p>
+                </div>
+                <div>
+                    <h4>Phone</h4>
+                    <p>+91 7464059133</p>
+                </div>
+                <div>
+                    <h4>Address</h4>
+                    <p>Tamilnadu, Tuticorin</p>
+                </div>
+            </div>
+
+            <hr class="about-hr">
+
+            <h3>☕ Thank you for choosing Brew Haven!</h3>
+            <p>
+                We look forward to serving you with exceptional coffee,
+                delicious food, and outstanding customer service.
+            </p>
+        </div>
+    </div>
+    <div class="chat-widget">
+        <div class="chat-icon" onclick="toggleChat()">
+            🤖
+        </div>
+         <!-- Hidden chat window -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                🤖 Brew Haven AI
+                <span onclick="toggleChat()">✖</span>
+            </div>
+            <div id="chat-box">
+                <div class="bot-message">🤖 Hello! I'm Brew Haven AI. How can I help you today?</div>
+            </div>
+
+
+            <div class="chat-footer">
+                <input
+                id="userMessage"
+                placeholder="Ask anything..."
+                onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">
+                    ➤
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<style>
+    /* ── Recommendation Navbar Button ── */
+    .main-nav {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+    }
+    .rec-nav-btn {
+        background: linear-gradient(135deg, #1dd1a1, #00b894);
+        color: #fff;
+        border: none;
+        padding: 9px 22px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(29,209,161,0.35);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .rec-nav-btn:hover {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 6px 22px rgba(29,209,161,0.5);
+    }
+    .rec-nav-btn.active {
+        background: linear-gradient(135deg, #00b894, #00cec9);
+    }
+
+    /* ── Premium Recommendation Modal ── */
+    .premium-rec-modal {
+        display: none;
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%) scale(0.85);
+        width: 440px; 
+        max-width: 92vw;
+        background: rgba(22, 34, 26, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(29, 209, 161, 0.3);
+        border-radius: 24px;
+        padding: 40px 30px 30px;
+        z-index: 9999;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(29, 209, 161, 0.1);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        max-height: 85vh;
+        overflow-y: auto;
+        
+        /* HIDE SCROLLBAR / STRIP */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .premium-rec-modal::-webkit-scrollbar {
+        display: none;
+    }
+
+    .rec-close-btn {
+        position: absolute; 
+        top: 20px; 
+        right: 20px;
+        background: rgba(255, 255, 255, 0.08); 
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff; 
+        font-size: 16px; 
+        width: 34px; 
+        height: 34px;
+        border-radius: 50%; 
+        cursor: pointer; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+    .rec-close-btn:hover {
+        background: rgba(255, 71, 87, 0.8);
+        border-color: rgba(255, 71, 87, 1);
+        transform: rotate(90deg);
+    }
+
+    .rec-modal-header {
+        margin-bottom: 25px;
+    }
+    .rec-modal-header h2 {
+        color: #1dd1a1; 
+        font-size: 1.6rem; 
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 10px rgba(29, 209, 161, 0.3);
+    }
+    .rec-modal-header p {
+        color: #a4b0af; 
+        font-size: 0.9rem; 
+        margin: 0;
+    }
+
+    .rec-list-container {
+        display: flex; 
+        flex-direction: column; 
+        gap: 14px;
+    }
+
+    /* ── Recommendation Item Card ── */
+    .rec-item-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-left: 4px solid #1dd1a1;
+        border-radius: 12px;
+        padding: 14px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .rec-item-card:hover {
+        background: linear-gradient(145deg, rgba(29,209,161,0.1), rgba(29,209,161,0.02));
+        transform: translateY(-3px) scale(1.02);
+        border-color: rgba(29,209,161,0.4);
+        box-shadow: 0 8px 25px rgba(29,209,161,0.15);
+    }
+    .rec-item-name {
+        color: #f1f2f6;
+        font-weight: 600;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .rec-item-tag {
+        font-size: 0.75rem;
+        color: #8395a7;
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+    }
+    .rec-item-price {
+        color: #1dd1a1;
+        font-weight: 700;
+        font-size: 1.15rem;
+        background: rgba(29,209,161,0.1);
+        padding: 6px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+    }
+
+    .rec-footer-text {
+        color: #747d8c; 
+        font-size: 0.8rem; 
+        margin-top: 25px;
+        font-weight: 500;
+    }
+</style>
+
+<script>
+    // ── Recommendation Data from Django ──
+    const REC_ITEMS = [
+        {% for item in rec_items %}
+        {
+            name:  "{{ item.name }}",
+            price: "{{ item.price }}",
+            type:  "{{ item.type }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    // ── Populate recommendation modal ──
+    function buildRecModal() {
+        const list = document.getElementById('rec-list');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const icons = { drink: '🍵', snack: '🥪' };
+
+        REC_ITEMS.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'rec-item-card';
+            card.innerHTML = `
+                <div>
+                    <div class="rec-item-name">${icons[item.type] || '✨'} ${item.name}</div>
+                    <div class="rec-item-tag">${item.type === 'drink' ? 'Beverage' : 'Snack'}</div>
+                </div>
+                <div class="rec-item-price">₹${parseFloat(item.price).toFixed(2)}</div>
+            `;
+            // Click to search item on menu
+            card.addEventListener('click', () => {
+                closeRecommendation();
+                const searchBox = document.getElementById('searchBox');
+                if (searchBox) {
+                    searchBox.value = item.name;
+                    searchBox.dispatchEvent(new Event('input'));
+                    setTimeout(() => searchBox.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+                }
+            });
+            list.appendChild(card);
+        });
+    }
+
+    function toggleRecommendation() {
+        const modal   = document.getElementById('rec-modal');
+        const overlay = document.getElementById('rec-overlay');
+        const btn     = document.getElementById('recNavBtn');
+
+        if (modal.style.display === 'block') {
+            closeRecommendation();
+        } else {
+            buildRecModal();
+            modal.style.display   = 'block';
+            overlay.style.display = 'block';
+            btn.classList.add('active');
+            // Trigger animation
+            requestAnimationFrame(() => {
+                modal.style.opacity   = '1';
+                modal.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        }
+    }
+
+    function closeRecommendation() {
+        const modal   = document.getElementById('rec-modal');
+        const overlay = document.getElementById('rec-overlay');
+        const btn     = document.getElementById('recNavBtn');
+
+        modal.style.opacity   = '0';
+        modal.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        btn.classList.remove('active');
+        setTimeout(() => {
+            modal.style.display   = 'none';
+            overlay.style.display = 'none';
+        }, 380);
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeRecommendation();
+    });
+</script>
+{% endblock %}
+

@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Brew Haven</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* ── Payment page background ── */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fce8d5;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 45px 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .payment-card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a3a28;
+            margin-bottom: 8px;
+        }
+
+        .payment-card > p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .qr-frame {
+            display: inline-block;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            border: 3px solid #1dd1a1;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(29,209,161,0.2);
+        }
+
+        .qr-frame img {
+            display: block;
+            border-radius: 8px;
+        }
+
+        .pay-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2d6a4f, #1dd1a1);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 12px;
+        }
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(29,209,161,0.4);
+        }
+
+        .back-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #e74c3c;
+            font-size: 15px;
+            font-weight: 600;
+            border: 2px solid #e74c3c;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .back-btn:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .payment-card { padding: 30px 20px; }
+            .payment-card h2 { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-card">
+        <h2>Scan &amp; Pay 📲</h2>
+        <p>Please scan the QR code below to complete your payment securely.</p>
+
+        <div class="qr-frame">
+            <img src="{% static 'images/payment_qr.jpeg' %}"
+                 alt="Payment QR Code"
+                 width="200" height="200">
+        </div>
+
+        <form action="{% url 'success' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="payment_status" value="completed">
+            <button type="submit" class="pay-btn">✅ I Have Paid — Confirm Order</button>
+            <a href="{% url 'order' %}" class="back-btn">← Go Back</a>
+        </form>
+    </div>
+</body>
+</html>

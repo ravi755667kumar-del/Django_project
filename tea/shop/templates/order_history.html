@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block body_class %}tea-mode{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Order History Styling ── */
+.history-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    animation: fadeIn 0.4s ease;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #c8a882;
+    padding-bottom: 15px;
+}
+
+.history-header h2 {
+    color: #2d6a4f;
+    font-size: 28px;
+    margin: 0;
+}
+
+.history-header .back-btn {
+    background: #fff;
+    color: #2d6a4f;
+    border: 1.5px solid #c8a882;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.history-header .back-btn:hover {
+    background: #2d6a4f;
+    color: #fff;
+    border-color: #2d6a4f;
+}
+
+/* ── Table Layout ── */
+.order-table-wrapper {
+    background: #fff;
+    border: 1px solid rgba(200, 168, 130, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.order-table th {
+    background: #fdf6ec;
+    color: #2d6a4f;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 2px solid #c8a882;
+}
+
+.order-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #4a3728;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.order-table tr:last-child td {
+    border-bottom: none;
+}
+
+.order-table tr:hover {
+    background: #f9f9f9;
+}
+
+.item-name-cell {
+    font-weight: 600;
+    color: #1a3a28;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e6f4ea;
+    color: #1e8e3e;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Empty State Styling */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border: 1px dashed rgba(200, 168, 130, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-top: 40px;
+}
+
+.empty-state h3 {
+    color: #1a3a28;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.empty-state .explore-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #2d6a4f, #1dd1a1);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 50px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 20px rgba(29, 209, 161, 0.35);
+}
+
+.empty-state .explore-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(29, 209, 161, 0.5);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <div class="history-header">
+        <h2>📦 My Order History</h2>
+        <a href="{% url 'menu' %}" class="back-btn">← Back to Menu</a>
+    </div>
+
+    {% if orders %}
+    <div class="order-table-wrapper">
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                {% localtime on %}
+                <tr>
+                    <td class="item-name-cell">{{ order.item_name }}</td>
+                    <td><strong>₹{{ order.price }}</strong></td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.Order_data_date|date:"d M Y" }}</td>
+                    <td>{{ order.Order_data_date|time:"h:i A" }}</td>
+                    <td><span class="status-badge">✅ Success</span></td>
+                </tr>
+                {% endlocaltime %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>No Orders Yet 🍵</h3>
+        <p>Looks like you haven't tasted our delicious teas yet!</p>
+        <a href="{% url 'menu' %}" class="explore-btn">Explore Menu</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
