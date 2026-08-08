@@ -139,8 +139,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ─── Email: Console (OTP prints in terminal — no SMTP needed) ───────────────
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# DEFAULT_FROM_EMAIL = 'noreply@brewhaven.com'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@brewhaven.com'
 
 # ─── To switch to real Gmail SMTP, comment the 2 lines above and uncomment ───
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
