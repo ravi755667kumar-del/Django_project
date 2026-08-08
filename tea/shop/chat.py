@@ -1,4 +1,3 @@
-from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 from django.conf import settings
 
@@ -7,11 +6,18 @@ from .rag import search_pdf
 from .memory import chat_memory
 from shop.recommendations.weather import get_weather
 
+# --- Lazy LLM: only created on first chatbot use ---
+_llm = None
 
-llm = ChatGroq(
-    model=settings.LLM_MODEL,
-    groq_api_key=settings.OPENAI_API_KEY,
-)
+def _get_llm():
+    global _llm
+    if _llm is None:
+        from langchain_groq import ChatGroq
+        _llm = ChatGroq(
+            model=settings.LLM_MODEL,
+            groq_api_key=settings.OPENAI_API_KEY,
+        )
+    return _llm
 
 def get_history(user_id):
     return chat_memory.get(user_id, [])
@@ -139,7 +145,7 @@ Retrieved information:
             
     messages.append(HumanMessage(content=question))
 
-    response = llm.invoke(messages)
+    response = _get_llm().invoke(messages)
     
     # Save bot response to history
     save_history(user_id, "bot", response.content)
