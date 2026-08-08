@@ -528,6 +528,25 @@ body.tea-mode {
     gap: 10px;
 }
 
+/* ── Recommendations nav button ── */
+.rec-nav-btn {
+    background: linear-gradient(135deg, #2d6a4f, #52b788);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(45,106,79,0.25);
+}
+.rec-nav-btn:hover {
+    background: linear-gradient(135deg, #52b788, #2d6a4f);
+    transform: translateY(-1px);
+}
+
 .menu-bar { display: flex; justify-content: space-between; align-items: center; margin: 0 0 5px; }
 
 .menu-left { display: flex; gap: 20px; }
@@ -1035,10 +1054,23 @@ nav.mobile-open a:hover {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: 6px;
+        flex-wrap: nowrap;
     }
     .brand-logo h1 {
-        font-size: 20px;
+        font-size: 17px;
+        white-space: nowrap;
+    }
+    .rec-nav-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    .profile-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     /* Search row: stack vertically */
@@ -1274,14 +1306,24 @@ nav.mobile-open a:hover {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: 4px;
         padding-bottom: 10px;
+        flex-wrap: nowrap;
     }
     .brand-logo h1 {
-        font-size: 17px;
+        font-size: 14px;
+        white-space: nowrap;
     }
-    .user-welcome {
-        font-size: 13px;
+    .rec-nav-btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+    .profile-btn {
+        padding: 5px 8px;
+        font-size: 11px;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     /* Search: full width stack */
