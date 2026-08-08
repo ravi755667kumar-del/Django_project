@@ -1,0 +1,47 @@
+Brew Haven - Combined Reference Document
+Consolidated content for the RAG knowledge base (menu, policies, guides & FAQ).
+
+About Brew Haven
+Our mission is to serve quality beverages and snacks with excellent customer service.
+
+How to Book an Order
+1. Login/Register
+2. Browse menu
+3. Add items to cart
+4. Proceed to order
+5. Enter mobile number
+6. Pay
+7. View order history.
+
+AI Smart Recommendations
+Brew Haven features a Machine Learning Recommendation Engine. The AI analyzes live weather patterns, time of day, and historical order data to instantly curate the perfect menu items specifically for the customer.
+
+Payment Policy
+Accepted: UPI, Debit Card, Credit Card, Cash.
+
+Delivery Policy
+Delivery within serviceable areas. Estimated delivery: 20-40 minutes.
+
+Refund Policy
+Refunds are issued for failed payments or verified preparation errors. Contact support within 30 minutes.
+
+FAQ
+Opening hours: 9 AM - 10 PM. Online payment supported. Takeaway available. Customization of drinks subject to availability.
+
+Store Rules
+No smoking. No outside food. Respect staff and other customers. Keep the premises clean.
+
+Company Policy
+Provide accurate information. Protect customer privacy. Follow food safety standards.
+
+Privacy Policy
+We protect customer information. Passwords should be securely stored. We do not share personal data.
+
+Terms and Conditions
+Using Brew Haven means accepting these terms. Prices may change without prior notice.
+
+Chatbot Policy
+The chatbot answers only Brew Haven-related questions. It refuses illegal, harmful, hateful, scam, malware, explicit, or unrelated requests.
+
+Contact Information
+Email: support@brewhaven.example | Phone: +91-7464059133
