@@ -533,13 +533,16 @@ body.tea-mode {
     background: linear-gradient(135deg, #2d6a4f, #52b788);
     color: #fff;
     border: none;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 14px;
+    /* Fixed small size — never grows at any screen width */
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 20px;
     font-weight: 600;
     cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+    white-space: nowrap;        /* never wraps text */
+    flex-shrink: 0;             /* never shrinks/squishes */
+    width: max-content;         /* always exactly as wide as its text */
+    transition: background 0.2s ease, transform 0.2s ease;
     box-shadow: 0 2px 8px rgba(45,106,79,0.25);
 }
 .rec-nav-btn:hover {
@@ -1062,9 +1065,11 @@ nav.mobile-open a:hover {
         white-space: nowrap;
     }
     .rec-nav-btn {
-        padding: 6px 10px;
+        padding: 6px 12px;
         font-size: 12px;
         flex-shrink: 0;
+        white-space: nowrap;
+        width: max-content;
     }
     .profile-btn {
         padding: 6px 10px;
@@ -1315,9 +1320,11 @@ nav.mobile-open a:hover {
         white-space: nowrap;
     }
     .rec-nav-btn {
-        padding: 5px 8px;
-        font-size: 11px;
+        padding: 6px 12px;
+        font-size: 12px;
         flex-shrink: 0;
+        white-space: nowrap;
+        width: max-content;
     }
     .profile-btn {
         padding: 5px 8px;
@@ -1753,13 +1760,14 @@ nav.mobile-open a:hover {
         max-width: 85px;
     }
 
-    /* Recommendation button: very small, no wrap */
+    /* Recommendation button: fixed small size at all tiny screens */
     .rec-nav-btn {
-        padding: 4px 6px;
-        font-size: 9px;
-        border-radius: 18px;
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 20px;
         flex-shrink: 0;
         white-space: nowrap;
+        width: max-content;
     }
 
     /* Profile button: very small */
