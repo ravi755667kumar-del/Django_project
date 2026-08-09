@@ -19,7 +19,8 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from shop.tokens import token_generator
-from shop.email_utlis import send_reset_email, send_otp_email
+import requests
+import os
 from shop.recommendations.dataset import update_dataset
 from shop.recommendations.predict import get_ml_recommendations
 
@@ -69,16 +70,51 @@ def login(request):
                 'otp_time': time.time()
             }
 
-            # Send OTP Email via Brevo in background thread — page returns instantly
+            # Send OTP via Brevo API (bypasses Render SMTP block — uses HTTPS port 443)
             def _send_otp_email():
+                url = "https://api.brevo.com/v3/smtp/email"
+                api_key = os.environ.get("BREVO_API_KEY", "")
+                headers = {
+                    "accept": "application/json",
+                    "api-key": api_key,
+                    "content-type": "application/json",
+                }
+                payload = {
+                    "sender": {"email": "ravi755667kumar@gmail.com", "name": "Brew Haven"},
+                    "to": [{"email": email}],
+                    "subject": "Your Brew Haven Verification Code",
+                    "htmlContent": f"""
+                        <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;
+                                    padding:30px;border:1px solid #e0e0e0;border-radius:10px;">
+                            <h2 style="color:#5c3317;text-align:center;">&#9749; Brew Haven</h2>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p>Hi <strong>{name}</strong>,</p>
+                            <p>Your verification code is:</p>
+                            <div style="text-align:center;margin:25px 0;">
+                                <span style="font-size:38px;font-weight:bold;color:#5c3317;
+                                             letter-spacing:10px;background:#fff3e0;
+                                             padding:12px 28px;border-radius:8px;
+                                             border:2px dashed #5c3317;">{otp}</span>
+                            </div>
+                            <p style="color:#999;font-size:13px;text-align:center;">
+                                &#x23F1; Valid for <strong>1 minute</strong>. Do not share it.
+                            </p>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p style="color:#bbb;font-size:12px;text-align:center;">&copy; Brew Haven Team</p>
+                        </div>""",
+                }
                 try:
-                    send_otp_email(name, email, otp)
+                    response = requests.post(url, json=payload, headers=headers, timeout=15)
+                    if response.status_code == 201:
+                        print(f"\n[+] OTP email sent to {email}\n", flush=True)
+                    else:
+                        print(f"\n[!] BREVO API REJECTED: {response.status_code} {response.text}\n", flush=True)
                 except Exception as e:
-                    print(f"\n[!] OTP EMAIL FAILED: {e}\n")
+                    print(f"\n[!] BREVO API ERROR: {e}\n", flush=True)
 
             threading.Thread(target=_send_otp_email, daemon=True).start()
 
-            # Render login page with OTP section open immediately
+            # Page returns instantly
             return render(request, "login.html", {"show_otp": True, "email": email})
 
         # ------------------ VERIFY OTP ------------------
@@ -201,12 +237,49 @@ def forgot_password(request):
             # Build the reset link
             reset_url = request.build_absolute_uri(reverse('reset_password', kwargs={'uidb64': uid, 'token': token}))
             
-            # Send reset email in background thread so page returns instantly
+            # Send reset email via Brevo API in background thread
             def _send_reset():
+                url = "https://api.brevo.com/v3/smtp/email"
+                api_key = os.environ.get("BREVO_API_KEY", "")
+                headers = {
+                    "accept": "application/json",
+                    "api-key": api_key,
+                    "content-type": "application/json",
+                }
+                payload = {
+                    "sender": {"email": "ravi755667kumar@gmail.com", "name": "Brew Haven"},
+                    "to": [{"email": customer.email}],
+                    "subject": "Brew Haven — Password Reset Request",
+                    "htmlContent": f"""
+                        <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;
+                                    padding:30px;border:1px solid #e0e0e0;border-radius:10px;">
+                            <h2 style="color:#5c3317;text-align:center;">&#9749; Brew Haven</h2>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p>Hello,</p>
+                            <p>You requested to reset your <strong>Brew Haven</strong> password.
+                               Click the button below:</p>
+                            <div style="text-align:center;margin:28px 0;">
+                                <a href="{reset_url}"
+                                   style="background:#5c3317;color:#fff;padding:12px 28px;
+                                          text-decoration:none;border-radius:6px;font-size:15px;">
+                                    Reset My Password
+                                </a>
+                            </div>
+                            <p style="color:#999;font-size:13px;text-align:center;">
+                                If you didn\'t request this, ignore this email.
+                            </p>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p style="color:#bbb;font-size:12px;text-align:center;">&copy; Brew Haven Team</p>
+                        </div>""",
+                }
                 try:
-                    send_reset_email(customer.email, reset_url)
+                    response = requests.post(url, json=payload, headers=headers, timeout=15)
+                    if response.status_code == 201:
+                        print(f"\n[+] Reset email sent to {customer.email}\n", flush=True)
+                    else:
+                        print(f"\n[!] BREVO RESET REJECTED: {response.status_code} {response.text}\n", flush=True)
                 except Exception as e:
-                    print(f"\n[!] RESET EMAIL ERROR: {e}\n")
+                    print(f"\n[!] BREVO RESET ERROR: {e}\n", flush=True)
 
             threading.Thread(target=_send_reset, daemon=True).start()
 
