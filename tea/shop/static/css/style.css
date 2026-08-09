@@ -533,16 +533,13 @@ body.tea-mode {
     background: linear-gradient(135deg, #2d6a4f, #52b788);
     color: #fff;
     border: none;
-    /* Fixed small size — never grows at any screen width */
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    white-space: nowrap;        /* never wraps text */
-    flex-shrink: 0;             /* never shrinks/squishes */
-    width: max-content;         /* always exactly as wide as its text */
-    transition: background 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    transition: all 0.2s ease;
     box-shadow: 0 2px 8px rgba(45,106,79,0.25);
 }
 .rec-nav-btn:hover {
@@ -1065,11 +1062,9 @@ nav.mobile-open a:hover {
         white-space: nowrap;
     }
     .rec-nav-btn {
-        padding: 6px 12px;
+        padding: 6px 10px;
         font-size: 12px;
         flex-shrink: 0;
-        white-space: nowrap;
-        width: max-content;
     }
     .profile-btn {
         padding: 6px 10px;
@@ -1247,6 +1242,43 @@ nav.mobile-open a:hover {
 }
 
 /* =====================================================
+   NARROW MOBILE  491px – 500px range
+   (screens too narrow for full button text)
+   ===================================================== */
+@media (max-width: 500px) {
+    .top-header {
+        gap: 4px;
+        flex-wrap: nowrap;
+        padding: 6px 4px 8px;
+    }
+    .brand-logo h1 {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90px;
+    }
+    /* Shrink Recommendations button — keep only icon + short label */
+    .rec-nav-btn {
+        padding: 5px 9px;
+        font-size: 10.5px;
+        border-radius: 20px;
+        flex-shrink: 0;
+        white-space: nowrap;
+        letter-spacing: 0;
+    }
+    /* Shrink Profile button to match */
+    .profile-btn {
+        padding: 5px 9px;
+        font-size: 10.5px;
+        border-radius: 20px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        letter-spacing: 0;
+    }
+}
+
+/* =====================================================
    MOBILE  up to 480px  (iPhone SE, XR, 12 Pro, etc.)
    ===================================================== */
 @media (max-width: 480px) {
@@ -1320,17 +1352,22 @@ nav.mobile-open a:hover {
         white-space: nowrap;
     }
     .rec-nav-btn {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 5px 8px;
+        font-size: 11px;
         flex-shrink: 0;
         white-space: nowrap;
-        width: max-content;
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .profile-btn {
         padding: 5px 8px;
         font-size: 11px;
         white-space: nowrap;
         flex-shrink: 0;
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* Search: full width stack */
@@ -1760,14 +1797,13 @@ nav.mobile-open a:hover {
         max-width: 85px;
     }
 
-    /* Recommendation button: fixed small size at all tiny screens */
+    /* Recommendation button: very small, no wrap */
     .rec-nav-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-        border-radius: 20px;
+        padding: 4px 6px;
+        font-size: 9px;
+        border-radius: 18px;
         flex-shrink: 0;
         white-space: nowrap;
-        width: max-content;
     }
 
     /* Profile button: very small */
