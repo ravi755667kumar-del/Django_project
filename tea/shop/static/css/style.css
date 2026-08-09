@@ -1,4 +1,10 @@
 /* --- 1. GLOBAL & BASE STYLES --- */
+html {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,6 +14,8 @@
 
 body {
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -448,6 +456,7 @@ body.tea-mode {
     gap: 25px;
     box-sizing: border-box;
     padding: 20px;
+    overflow-x: hidden;
     color: #2c2c2c;  /* dark text for light background */
 }
 
