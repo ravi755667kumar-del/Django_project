@@ -1719,3 +1719,100 @@ nav.mobile-open a:hover {
     transform: translateY(-100%);
 }
 
+
+/* =====================================================
+   SMALL PHONES  375px-390px  (iPhone SE, Galaxy A)
+   ===================================================== */
+@media (max-width: 390px) {
+
+    /* Remove all side gap so nothing looks blank on left */
+    .content-wrapper {
+        padding: 8px 6px;
+        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Header: ultra-compact single row */
+    .top-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 3px;
+        flex-wrap: nowrap;
+        padding: 6px 0 8px;
+        width: 100%;
+    }
+
+    .brand-logo h1 {
+        font-size: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 85px;
+    }
+
+    /* Recommendation button: very small, no wrap */
+    .rec-nav-btn {
+        padding: 4px 6px;
+        font-size: 9px;
+        border-radius: 18px;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    /* Profile button: very small */
+    .profile-btn {
+        padding: 4px 6px;
+        font-size: 9px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-radius: 18px;
+    }
+
+    /* Search: full width */
+    .search-menu {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        margin: 0;
+        width: 100%;
+    }
+    .search-menu input,
+    .search-menu select {
+        width: 100%;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+
+    /* Category pills */
+    .menu-bar {
+        gap: 4px;
+        margin: 10px 0 8px;
+        overflow-x: auto;
+    }
+    .menu-left button {
+        padding: 4px 7px;
+        font-size: 9px;
+    }
+
+    /* Grid: 1 column full width fixes the blank left side */
+    .tea-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+    .tea-card {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 12px;
+    }
+    .tea-card h3 { font-size: 1.05em; }
+    .tea-card p  { font-size: 0.83em; }
+    .tea-price   { font-size: 15px; }
+
+    /* Chat widget stays within screen */
+    .chat-widget { right: 6px; bottom: 6px; }
+    .chat-box    { width: calc(100vw - 16px); right: 0; }
+}
