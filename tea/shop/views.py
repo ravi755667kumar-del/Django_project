@@ -73,7 +73,9 @@ def login(request):
             # Send OTP via Brevo API (bypasses Render SMTP block — uses HTTPS port 443)
             def _send_otp_email():
                 url = "https://api.brevo.com/v3/smtp/email"
-                api_key = os.environ.get("BREVO_API_KEY", "")
+                api_key = os.environ.get("BREVO_API_KEY", "").strip()  # .strip() removes accidental spaces
+                # DEBUG: print key info to Render logs (remove after confirmed working)
+                print(f"[DEBUG] BREVO_API_KEY length={len(api_key)} | starts_with='{api_key[:8]}'", flush=True)
                 headers = {
                     "accept": "application/json",
                     "api-key": api_key,
