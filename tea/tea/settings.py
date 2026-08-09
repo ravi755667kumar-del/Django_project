@@ -138,19 +138,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ─── Email: Console (OTP prints in terminal — no SMTP needed) ───────────────
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#DEFAULT_FROM_EMAIL = 'noreply@brewhaven.com'
-
-# ─── To switch to real Gmail SMTP, comment the 2 lines above and uncomment ───
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'ravi755667kumar@gmail.com'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# ─── Email: Brevo (Sendinblue) SMTP ─────────────────────────────────────────
+EMAIL_BACKEND    = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST       = 'smtp-relay.brevo.com'
+EMAIL_PORT       = 587
+EMAIL_USE_TLS    = True
+EMAIL_USE_SSL    = False
+EMAIL_TIMEOUT    = 30
+EMAIL_HOST_USER  = 'b4e75e001@smtp-brevo.com'   # Brevo login/username
+EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP_KEY')  # Set this in Render → Environment
+DEFAULT_FROM_EMAIL  = 'b4e75e001@smtp-brevo.com'
 
 
 # code for the cahes----

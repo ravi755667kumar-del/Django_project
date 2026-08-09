@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from shop.tokens import token_generator
-from shop.email_utlis import send_reset_email
+from shop.email_utlis import send_reset_email, send_otp_email
 from shop.recommendations.dataset import update_dataset
 from shop.recommendations.predict import get_ml_recommendations
 
@@ -69,18 +69,12 @@ def login(request):
                 'otp_time': time.time()
             }
 
-            # Send OTP Email in background thread so page returns instantly
+            # Send OTP Email via Brevo in background thread — page returns instantly
             def _send_otp_email():
                 try:
-                    send_mail(
-                        'Your Brew Haven Verification Code',
-                        f'Hi {name},\n\nYour OTP is: {otp}\n\nIt is valid for 1 minute.\n\n— Brew Haven Team',
-                        None,   # uses DEFAULT_FROM_EMAIL from settings
-                        [email],
-                        fail_silently=True,
-                    )
+                    send_otp_email(name, email, otp)
                 except Exception as e:
-                    print(f"\n[!] SMTP ERROR: {e}\n")
+                    print(f"\n[!] OTP EMAIL FAILED: {e}\n")
 
             threading.Thread(target=_send_otp_email, daemon=True).start()
 
