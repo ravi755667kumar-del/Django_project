@@ -69,26 +69,22 @@ def login(request):
                 'otp_time': time.time()
             }
 
-            # Send Email
-            try:
-                send_mail(
-                    'Your Brew Haven Verification Code',
-                    f'Hi {name},\n\nYour OTP is: {otp}\n\nIt is valid for 1 minute.\n\n— Tea Brewan Team',
-                    None,   # uses DEFAULT_FROM_EMAIL from settings
-                    [email],
-                    fail_silently=False,
-                )
-            except Exception as e:
-                print(f"\n[!] SMTP ERROR: {e}\n")
-                # Email failed — wipe temp session and show a friendly message
-                if 'temp_user' in request.session:
-                    del request.session['temp_user']
-                return render(request, "login.html", {
-                    "error_message": "Could not send OTP to that email. Please enter a valid email address.",
-                    "form_name": name, "form_email": email,
-                })
+            # Send OTP Email in background thread so page returns instantly
+            def _send_otp_email():
+                try:
+                    send_mail(
+                        'Your Brew Haven Verification Code',
+                        f'Hi {name},\n\nYour OTP is: {otp}\n\nIt is valid for 1 minute.\n\n— Brew Haven Team',
+                        None,   # uses DEFAULT_FROM_EMAIL from settings
+                        [email],
+                        fail_silently=True,
+                    )
+                except Exception as e:
+                    print(f"\n[!] SMTP ERROR: {e}\n")
 
-            # Render login page with OTP section open
+            threading.Thread(target=_send_otp_email, daemon=True).start()
+
+            # Render login page with OTP section open immediately
             return render(request, "login.html", {"show_otp": True, "email": email})
 
         # ------------------ VERIFY OTP ------------------
@@ -211,9 +207,15 @@ def forgot_password(request):
             # Build the reset link
             reset_url = request.build_absolute_uri(reverse('reset_password', kwargs={'uidb64': uid, 'token': token}))
             
-            # Send Email using custom util
-            send_reset_email(customer.email, reset_url)
-            
+            # Send reset email in background thread so page returns instantly
+            def _send_reset():
+                try:
+                    send_reset_email(customer.email, reset_url)
+                except Exception as e:
+                    print(f"\n[!] RESET EMAIL ERROR: {e}\n")
+
+            threading.Thread(target=_send_reset, daemon=True).start()
+
             messages.success(request, "A password reset link has been sent to your email.", extra_tags='forgot')
         except Customer.DoesNotExist:
             messages.error(request, "If that email exists in our system, a reset link was sent.", extra_tags='forgot')
