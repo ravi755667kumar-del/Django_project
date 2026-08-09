@@ -138,16 +138,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ─── Email: Brevo (Sendinblue) SMTP ─────────────────────────────────────────
-EMAIL_BACKEND    = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST       = 'smtp-relay.brevo.com'
-EMAIL_PORT       = 587
-EMAIL_USE_TLS    = True
-EMAIL_USE_SSL    = False
-EMAIL_TIMEOUT    = 30
-EMAIL_HOST_USER  = 'b4e75e001@smtp-brevo.com'   # Brevo login/username
-EMAIL_HOST_PASSWORD = os.getenv('BREVO_SMTP_KEY')  # Set this in Render → Environment
-DEFAULT_FROM_EMAIL  = 'b4e75e001@smtp-brevo.com'
+# ─── Email ───────────────────────────────────────────────────────────────────
+# Emails (OTP + password reset) are sent directly via the Brevo REST API
+# inside views.py using requests.post() — Django's email backend is NOT used.
+# Required env var on Render: BREVO_API_KEY
+# ─────────────────────────────────────────────────────────────────────────────
 
 
 # code for the cahes----
