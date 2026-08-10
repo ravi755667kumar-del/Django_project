@@ -219,6 +219,80 @@
 
 {% block extra_scripts %}
 <style>
+    /* ── Responsive Overrides for menu.html ── */
+    html, body {
+        width: 100%;
+        max-width: 100vw;
+    }
+    
+    .content-wrapper {
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Prevent fixed widths from breaking viewport */
+    .search-menu {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .search-menu input {
+        width: 100% !important;
+        max-width: 350px !important; /* Retains desktop design */
+    }
+
+    .chat-widget {
+        max-width: calc(100vw - 30px);
+    }
+    
+    .chat-window {
+        max-width: 100% !important;
+    }
+
+    .premium-rec-modal, .about-card, .tea-card {
+        max-width: 100%;
+    }
+
+    /* Adjust header elements to fit one line on narrow screens */
+    @media (max-width: 500px) {
+        .top-header {
+            gap: 5px !important;
+            padding: 10px 5px !important;
+        }
+        .brand-logo h1 {
+            font-size: 14px !important;
+            white-space: nowrap;
+        }
+        .rec-nav-btn {
+            padding: 5px 8px !important;
+            font-size: 11px !important;
+            max-width: 110px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .profile-btn {
+            padding: 5px 8px !important;
+            font-size: 11px !important;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-widget {
+            right: 15px !important;
+            bottom: 15px !important;
+        }
+        .content-wrapper {
+            padding: 10px !important;
+        }
+    }
+
     /* ── Recommendation Navbar Button ── */
     .main-nav {
         display: flex;
