@@ -222,40 +222,61 @@
     /* ── Responsive Overrides for menu.html ── */
     html, body {
         width: 100%;
-        max-width: 100vw;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
     
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
     .content-wrapper {
-        width: 100% !important;
-        max-width: 100vw !important;
+        width: 100%;
+        max-width: 100%;
         box-sizing: border-box !important;
     }
 
-    * {
-        box-sizing: border-box;
-    }
-
-    /* Prevent fixed widths from breaking viewport */
+    /* 1. Fix Search Menu overflowing its parent */
     .search-menu {
         width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
+        flex-wrap: wrap; /* Allows input and select to wrap on tiny screens instead of pushing out */
     }
     
-    .search-menu input {
-        width: 100% !important;
-        max-width: 350px !important; /* Retains desktop design */
+    .search-menu input, .search-menu select {
+        flex: 1 1 100%;
+        max-width: 100% !important; 
+        box-sizing: border-box;
+    }
+    
+    @media (min-width: 600px) {
+        .search-menu input { max-width: 350px !important; }
+        .search-menu select { flex: 0 1 auto; }
     }
 
+    /* 2. Fix Chat Widget / Window Fixed Widths causing right blank space */
     .chat-widget {
-        max-width: calc(100vw - 30px);
+        max-width: calc(100% - 30px);
     }
     
     .chat-window {
         max-width: 100% !important;
+        width: 340px; 
     }
 
-    .premium-rec-modal, .about-card, .tea-card {
+    /* 3. Fix any cards/containers expanding past screen width */
+    .premium-rec-modal, .about-card, .tea-card, .custom-about-container {
+        width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
     }
 
     /* Adjust header elements to fit one line on narrow screens */
@@ -328,7 +349,7 @@
         top: 50%; left: 50%;
         transform: translate(-50%, -50%) scale(0.85);
         width: 440px; 
-        max-width: 92vw;
+        max-width: 92%;
         background: rgba(22, 34, 26, 0.85);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
