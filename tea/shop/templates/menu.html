@@ -279,29 +279,31 @@
         height: auto;
     }
 
-    /* Adjust header elements to fit one line on narrow screens */
+    /* Adjust header elements to dynamically scale with screen width on small phones */
     @media (max-width: 500px) {
         .top-header {
-            gap: 5px !important;
-            padding: 10px 5px !important;
+            gap: 1.5vw !important;
+            padding: 2vw 1vw !important;
+            width: 100%;
+            justify-content: space-between !important;
         }
         .brand-logo h1 {
-            font-size: 14px !important;
+            font-size: clamp(11px, 3.8vw, 15px) !important;
             white-space: nowrap;
         }
         .rec-nav-btn {
-            padding: 5px 8px !important;
-            font-size: 11px !important;
-            white-space: normal !important; /* Allow wrapping */
-            flex-shrink: 1; /* Allow shrinking */
-            max-width: 100%;
+            padding: 1.5vw 2.5vw !important;
+            font-size: clamp(8px, 2.6vw, 11px) !important;
+            white-space: nowrap !important;
+            flex-shrink: 1;
+            min-width: 0; /* allows flexbox to compress it */
         }
         .profile-btn {
-            padding: 5px 8px !important;
-            font-size: 11px !important;
-            white-space: normal !important; /* Allow wrapping */
+            padding: 1.5vw 2.5vw !important;
+            font-size: clamp(8px, 2.6vw, 11px) !important;
+            white-space: nowrap !important;
             flex-shrink: 1;
-            max-width: 100%;
+            min-width: 0; /* allows flexbox to compress it */
         }
         .chat-widget {
             right: 15px !important;
