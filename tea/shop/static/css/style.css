@@ -374,7 +374,8 @@ body.tea-mode {
     margin: 0;
 }
 .search-menu input {
-    width: 350px;
+    width: 100%;
+    max-width: 350px;
     padding: 10px 15px;
     border: 1.5px solid #c8a882;
     border-radius: 25px;
@@ -589,15 +590,11 @@ body.tea-mode {
     background: #1dd1a1;
 }
 .chat-widget{
-
-    position:fixed;
-
-    bottom:25px;
-
-    right:25px;
-
-    z-index:999;
-
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    z-index: 999;
+    max-width: calc(100vw - 20px); /* never wider than screen */
 }
 
 .chat-icon{
@@ -627,15 +624,15 @@ body.tea-mode {
 }
 
 .chat-window{
-    display:none;
-    position: relative;
-    width:340px;
-    height:480px;
-    background:rgb(211, 162, 162);
-    border-radius:15px;
-    overflow: hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
     display: none;
+    position: relative;
+    width: 340px;
+    max-width: calc(100vw - 30px); /* clamps on small screens */
+    height: 480px;
+    background: rgb(211, 162, 162);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
     flex-direction: column;
 }
 
