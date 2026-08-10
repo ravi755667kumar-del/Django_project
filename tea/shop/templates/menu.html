@@ -292,18 +292,16 @@
         .rec-nav-btn {
             padding: 5px 8px !important;
             font-size: 11px !important;
-            max-width: 110px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal !important; /* Allow wrapping */
+            flex-shrink: 1; /* Allow shrinking */
+            max-width: 100%;
         }
         .profile-btn {
             padding: 5px 8px !important;
             font-size: 11px !important;
-            max-width: 120px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal !important; /* Allow wrapping */
+            flex-shrink: 1;
+            max-width: 100%;
         }
         .chat-widget {
             right: 15px !important;
