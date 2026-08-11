@@ -92,113 +92,9 @@ nav a:hover {
 }
 
 /* =============================================
-   LOGIN BODY — clips the absolute side images
+   OLD LOGIN BODY / HERO / SIDE IMAGES REMOVED
+   (replaced by cinematic hero layout — see LOGIN PAGE section)
    ============================================= */
-.login-body {
-    position: relative;
-    overflow: hidden;          /* KEY: clips side images cleanly */
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 160px 0 40px;  /* ← pushes h1, p & bottom images down to cover side images */
-}
-
-/* =============================================
-   HERO TEXT
-   ============================================= */
-.hero {
-    text-align: center;
-    color: #fff;
-    padding: 0 20px;
-    z-index: 1;
-}
-
-.hero h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-.hero p {
-    width: 520px;
-    max-width: 90%;
-    text-align: center;
-    line-height: 1.7;
-    margin: 20px auto 0;
-    font-size: 15px;
-    opacity: 0.92;
-}
-
-/* =============================================
-   SIDE DECORATIVE IMAGES (desktop)
-   ============================================= */
-.left-side-image {
-    position: absolute;
-    left: -130px;          /* peek in ~120px from left edge */
-    top: 35%;              /* moved up from 50% */
-    transform: translateY(-50%);
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.left-side-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.right-side-image {
-    position: absolute;
-    right: -130px;         /* peek in ~120px from right edge */
-    top: 35%;              /* moved up from 50% */
-    transform: translateY(-50%);
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.right-side-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* =============================================
-   BOTTOM CATEGORY IMAGES
-   ============================================= */
-.downside-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 35px;
-    gap: 30px;
-    z-index: 1;
-}
-
-.down-img {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-}
-
-.down-img:hover {
-    transform: scale(1.08) translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-}
 
 /* =============================================
    AUTH SLIDE-IN PANEL
@@ -920,12 +816,6 @@ nav.mobile-open a:hover {
     nav { gap: 22px; }
     nav a { font-size: 16px; }
 
-    .left-side-image  { left: -145px;  width: 260px; height: 260px; }
-    .right-side-image { right: -145px; width: 260px; height: 260px; }
-
-    .hero h1 { font-size: 28px; }
-    .hero p  { width: 460px; }
-    .down-img { width: 145px; height: 145px; }
 
     #auth-wrapper { width: 35%; right: -38%; }
 }
@@ -939,13 +829,6 @@ nav.mobile-open a:hover {
     nav { gap: 18px; }
     nav a { font-size: 15px; }
 
-    /* Side images hidden — too narrow to look good */
-    .left-side-image,
-    .right-side-image { display: none; }
-
-    .hero h1 { font-size: 26px; }
-    .hero p  { width: 80%; font-size: 14px; }
-    .down-img { width: 130px; height: 130px; }
 
     #auth-wrapper { width: 42%; right: -46%; }
 }
@@ -1020,36 +903,6 @@ nav.mobile-open a:hover {
         display: block;
     }
 
-    /* --- Hero section --- */
-    .hero {
-        margin-top: 40px;
-        padding: 0 15px;
-    }
-    .hero h1 {
-        font-size: 22px;
-    }
-    .hero p {
-        width: 90%;
-        font-size: 14px;
-        margin-top: 15px;
-    }
-
-    /* Hide decorative side images on smaller screens */
-    .left-side-image,
-    .right-side-image {
-        display: none;
-    }
-
-    /* Downside images: smaller & 2-per-row */
-    .downside-image {
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-top: 20px;
-    }
-    .down-img {
-        width: 130px;
-        height: 130px;
-    }
 
     /* --- Menu Page --- */
     .content-wrapper {
@@ -1190,17 +1043,6 @@ nav.mobile-open a:hover {
         padding: 25px 18px;
     }
 
-    .hero h1 {
-        font-size: 20px;
-    }
-    .hero p {
-        width: 95%;
-        font-size: 13px;
-    }
-    .down-img {
-        width: 110px;
-        height: 110px;
-    }
 
     /* Tea grid: still 2 columns */
     .tea-grid {
@@ -1313,32 +1155,6 @@ nav.mobile-open a:hover {
         right: 0;
     }
 
-    /* --- Hero area --- */
-    .hero {
-        margin-top: 25px;
-        padding: 0 12px;
-    }
-    .hero h1 {
-        font-size: 18px;
-        line-height: 1.4;
-    }
-    .hero p {
-        width: 100%;
-        font-size: 12px;
-        margin-top: 12px;
-    }
-
-    /* Bottom images: wrap, small */
-    .downside-image {
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-    }
-    .down-img {
-        width: 95px;
-        height: 95px;
-        border-radius: 14px;
-    }
 
     /* --- Menu page --- */
     .content-wrapper {
@@ -1518,9 +1334,7 @@ nav.mobile-open a:hover {
    ===================================================== */
 @media (max-width: 360px) {
     .logo img { width: 38px; height: 38px; }
-    .hero h1  { font-size: 16px; }
-    .hero p   { font-size: 11px; }
-    .down-img { width: 80px; height: 80px; }
+
     .tea-card { padding: 14px 12px; }
     .tea-card h3 { font-size: 1.1em; }
     .cart-header, .cart-item { font-size: 11px; }
@@ -1865,4 +1679,276 @@ nav.mobile-open a:hover {
     /* Chat widget stays within screen */
     .chat-widget { right: 6px; bottom: 6px; }
     .chat-box    { width: calc(100vw - 16px); right: 0; }
+}
+
+
+/* =====================================================
+   LOGIN PAGE — Hero & Floating Header
+   ===================================================== */
+
+/* Override body background for login page */
+body.auth-mode {
+    background: #000 !important;
+    animation: none !important;
+}
+
+/* Hero fills full viewport */
+.lp-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 500px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.lp-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    z-index: 0;
+}
+
+.lp-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        rgba(10, 20, 12, 0.85) 0%,
+        rgba(10, 20, 12, 0.55) 55%,
+        rgba(10, 20, 12, 0.10) 100%
+    );
+    z-index: 1;
+}
+
+/* Header floats transparently over the background image */
+.lp-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+/* Logo — circular badge over the image */
+.lp-header .logo img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Nav links — white on dark image */
+.lp-header nav {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+}
+
+.lp-header nav a {
+    color: rgba(255, 255, 255, 0.88) !important;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.lp-header nav a:hover {
+    color: #1dd1a1 !important;
+}
+
+/* Hero editorial text */
+.lp-hero__content {
+    position: relative;
+    z-index: 2;
+    padding: 0 6vw;
+    max-width: 640px;
+    color: #fff;
+    margin-top: 80px;
+}
+
+.lp-hero__eyebrow {
+    display: block;
+    font-family: 'Georgia', serif;
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0.28em;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 18px;
+    text-transform: uppercase;
+}
+
+.lp-hero__title {
+    font-family: 'Georgia', serif;
+    font-size: clamp(38px, 6vw, 80px);
+    font-weight: 700;
+    line-height: 1.08;
+    margin: 0 0 20px 0;
+    color: #fff;
+}
+
+.lp-hero__title em {
+    font-style: italic;
+    color: #a8e6c3;
+}
+
+.lp-hero__sub {
+    font-size: clamp(13px, 1.4vw, 16px);
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.72);
+    margin-bottom: 36px;
+    max-width: 460px;
+}
+
+.lp-hero__actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* CTA Button */
+.lp-btn {
+    display: inline-block;
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+}
+
+.lp-btn--primary {
+    background: #1dd1a1;
+    color: #0f1b12;
+}
+
+.lp-btn--primary:hover {
+    background: #16c491;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(29, 209, 161, 0.45);
+}
+
+/* Hide hamburger on login page (only 2 nav links) */
+.login-page .hamburger {
+    display: none !important;
+}
+
+/* Login page mobile responsiveness */
+@media (max-width: 600px) {
+    .lp-header { padding: 14px 18px; }
+    .lp-header .logo img { width: 52px; height: 52px; }
+    .lp-header nav { gap: 16px; }
+    .lp-header nav a { font-size: 13px; }
+    .lp-hero__content { padding: 0 5vw; margin-top: 70px; }
+    .lp-hero__sub br { display: none; }
+    .lp-btn { padding: 12px 22px; font-size: 13px; }
+}
+
+/* -- GLOBAL CLICK PARTICLES -- */
+.click-particle {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 0 10px rgba(255,255,255,0.9);
+}
+
+/* -- PREMIUM ITEM DETAIL MODAL -- */
+.premium-item-modal {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -40%) scale(0.9);
+    width: 380px; 
+    max-width: 90%;
+    background: linear-gradient(145deg, rgba(22, 34, 26, 0.95), rgba(15, 20, 18, 0.98));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(29, 209, 161, 0.4);
+    border-radius: 20px;
+    padding: 35px 25px 25px;
+    z-index: 9999;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(29, 209, 161, 0.15);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+}
+.item-close-btn {
+    position: absolute; 
+    top: 15px; 
+    right: 15px;
+    background: rgba(255, 255, 255, 0.08); 
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff; 
+    font-size: 14px; 
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: all 0.2s ease;
+}
+.item-close-btn:hover {
+    background: rgba(255, 71, 87, 0.8);
+    transform: rotate(90deg);
+}
+.item-modal-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+.item-modal-content h2 {
+    color: #1dd1a1;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+.item-modal-price {
+    display: inline-block;
+    background: rgba(29, 209, 161, 0.15);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    border: 1px solid rgba(29,209,161,0.3);
+}
+.item-modal-content p {
+    color: #a4b0af;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+.item-modal-add-btn {
+    background: linear-gradient(135deg, #1dd1a1, #00b894);
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(29,209,161,0.4);
+    transition: transform 0.2s;
+    width: 100%;
+}
+.item-modal-add-btn:hover {
+    transform: translateY(-2px) scale(1.03);
 }

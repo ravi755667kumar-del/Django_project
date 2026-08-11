@@ -470,3 +470,87 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+/* -- GLOBAL CLICK PARTICLE EFFECT -- */
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.premium-item-modal') || e.target.closest('.premium-rec-modal') || e.target.closest('.chat-window')) {
+        return;
+    }
+    createClickParticles(e.clientX, e.clientY);
+});
+
+function createClickParticles(x, y) {
+    const colors = ['#1dd1a1', '#ff4757', '#ffa502', '#3742fa', '#ffffff'];
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'click-particle';
+        document.body.appendChild(particle);
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = 40 + Math.random() * 80;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+
+        particle.animate([
+            { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 1 },
+            { transform: "translate(calc(-50% + " + tx + "px), calc(-50% + " + ty + "px)) scale(0)", opacity: 0 }
+        ], {
+            duration: 800 + Math.random() * 400,
+            easing: 'cubic-bezier(0, .9, .57, 1)'
+        });
+
+        setTimeout(() => { if(particle.parentNode) particle.remove() }, 1200);
+    }
+}
+
+/* -- ITEM DETAIL MODAL -- */
+function showItemDetail(name, price, desc, icon) {
+    document.getElementById('item-modal-icon').innerText = icon || '??';
+    document.getElementById('item-modal-title').innerText = name;
+    document.getElementById('item-modal-price').innerText = '?' + price;
+    document.getElementById('item-modal-desc').innerText = desc || 'Enjoy our delicious ' + name + '!';
+    
+    const addBtn = document.getElementById('item-modal-add-btn');
+    addBtn.onclick = function(e) {
+        addToCart(name, parseFloat(price), e.target);
+        closeItemModal();
+    };
+
+    const modal = document.getElementById('item-modal');
+    const overlay = document.getElementById('item-modal-overlay');
+    
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+    
+    requestAnimationFrame(() => {
+        modal.style.opacity = '1';
+        modal.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+}
+
+function closeItemModal() {
+    const modal = document.getElementById('item-modal');
+    const overlay = document.getElementById('item-modal-overlay');
+    
+    modal.style.opacity = '0';
+    modal.style.transform = 'translate(-50%, -40%) scale(0.9)';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }, 300);
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        const modal = document.getElementById('item-modal');
+        if (modal && modal.style.display === 'block') {
+            closeItemModal();
+        }
+    }
+});

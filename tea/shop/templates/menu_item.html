@@ -11,33 +11,33 @@
 
     <div id="hot-category" class="tea-grid">
         {% for drink in hot_drinks %}
-        <div class="glass-panel tea-card">
+        <div class="glass-panel tea-card" onclick="showItemDetail('{{ drink.name|escapejs }}', '{{ drink.price }}', '{{ drink.description|escapejs }}', '🔥')">
             <h3>{{ drink.name }}</h3>
             <span class="tea-price">₹{{ drink.price }}</span>
             <p>{{ drink.description }}</p>
-            <button class="cart-add-btn" onclick="addToCart('{{ drink.name|escapejs }}', {{drink.price}}, this)">➕</button>
+            <button class="cart-add-btn" onclick="event.stopPropagation(); addToCart('{{ drink.name|escapejs }}', {{drink.price}}, this)">➕</button>
         </div>
         {% endfor %}    
     </div>
 
     <div id="cold-category" class="tea-grid hidden" style="display: none;">
         {% for drink in cold_drinks %}
-        <div class="glass-panel tea-card">
+        <div class="glass-panel tea-card" onclick="showItemDetail('{{ drink.name|escapejs }}', '{{ drink.price }}', '{{ drink.description|escapejs }}', '❄️')">
             <h3>{{ drink.name }}</h3>
             <span class="tea-price">₹{{ drink.price }}</span>
             <p>{{ drink.description }}</p>
-            <button class="cart-add-btn" onclick="addToCart('{{ drink.name|escapejs }}', {{drink.price}}, this)">➕</button>
+            <button class="cart-add-btn" onclick="event.stopPropagation(); addToCart('{{ drink.name|escapejs }}', {{drink.price}}, this)">➕</button>
         </div>
         {% endfor %}   
     </div>
     
     <div id="snack-category" class="tea-grid hidden" style="display: none;">
         {% for snack in snacks %}
-        <div class="glass-panel tea-card">
+        <div class="glass-panel tea-card" onclick="showItemDetail('{{ snack.name|escapejs }}', '{{ snack.price }}', '{{ snack.description|escapejs }}', '🍔')">
             <h3>{{ snack.name }}</h3>
             <span class="tea-price">₹{{ snack.price }}</span>
             <p>{{ snack.description }}</p>
-            <button class="cart-add-btn" onclick="addToCart('{{ snack.name|escapejs }}', {{snack.price}}, this)">➕</button>
+            <button class="cart-add-btn" onclick="event.stopPropagation(); addToCart('{{ snack.name|escapejs }}', {{snack.price}}, this)">➕</button>
         </div>
         {% endfor %}
     </div>

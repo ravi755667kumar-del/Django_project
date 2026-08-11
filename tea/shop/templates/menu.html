@@ -53,6 +53,18 @@
         <p class="rec-footer-text">Click any item to find it on the menu ↓</p>
     </div>
 
+    <!-- ===== ITEM DETAIL POPUP MODAL ===== -->
+    <div id="item-modal-overlay" onclick="closeItemModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9998; backdrop-filter:blur(8px);"></div>
+    <div id="item-modal" class="premium-item-modal">
+        <button class="item-close-btn" onclick="closeItemModal()">✕</button>
+        <div class="item-modal-content">
+            <div class="item-modal-icon" id="item-modal-icon">🍵</div>
+            <h2 id="item-modal-title">Item Name</h2>
+            <div class="item-modal-price" id="item-modal-price">₹0</div>
+            <p id="item-modal-desc">Item description goes here.</p>
+            <button class="item-modal-add-btn" id="item-modal-add-btn">Add to Cart</button>
+        </div>
+    </div>
 
     <form class="search-menu">
         <input type="text" id="searchBox" name="search" placeholder="Search menu">

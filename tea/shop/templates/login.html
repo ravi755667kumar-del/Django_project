@@ -4,59 +4,50 @@
 {% block body_class %}auth-mode{% endblock %}
 
 {% block content %}
-<!-- Login page wrapper — position:relative so side images clip correctly -->
+<!-- Login page wrapper -->
 <div class="login-page">
 
-    <header>
-        <div class="logo">
-            <img src="{% static 'images/header.jpg' %}" alt="Logo" width="80" height="80">
-        </div>
-        <nav id="main-nav">
-            <a href="{% url 'menu' %}#about-section">About</a>
-            <a href="#" onclick="openLogin(); closeMobileMenu(); return false;">Login</a>
-        </nav>
-        <!-- Hamburger button — shown only on mobile via CSS -->
-        <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </header>
+    <!-- ── Full-Screen Cinematic Hero (header floats inside it) ── -->
+    <div class="lp-hero">
 
-    <!-- Main centre content -->
-    <div class="login-body">
+        <!-- Background image -->
+        <img src="{% static 'images/login_hero.jpg' %}" alt="Tea experience" class="lp-hero__bg">
+        <!-- Dark gradient overlay -->
+        <div class="lp-hero__overlay"></div>
 
-        <!-- Decorative side images — clipped by .login-body overflow:hidden -->
-        <div class="left-side-image">
-            <img src="{% static 'images/left.jpg' %}" alt="Image" loading="lazy">
-        </div>
-        <div class="right-side-image">
-            <img src="{% static 'images/right.jpg' %}" alt="Image" loading="lazy">
-        </div>
+        <!-- ── Header overlaid on top of the image ── -->
+        <header class="lp-header">
+            <div class="logo">
+                <img src="{% static 'images/header_green.jpg' %}" alt="Tea Brewan Logo" width="80" height="80">
+            </div>
+            <nav id="main-nav">
+                <a href="{% url 'menu' %}#about-section">About</a>
+                <a href="#" onclick="openLogin(); closeMobileMenu(); return false;">Login</a>
+            </nav>
+            <!-- Hamburger button — mobile only -->
+            <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
 
-        <!-- Hero text -->
-        <div class="hero">
-            <!-- 3D Cup Animation Container -->
-            <div id="cup-3d-container" style="width: 100%; height: 350px; margin: -140px auto 10px auto; display: flex; justify-content: center; overflow: hidden; pointer-events: none;"></div>
-
-            <h1 style="font-size: 28px; line-height: 1.2; font-weight: bold;">Brew Happiness in Every cup ☕</h1>
-            
-            <p style="font-size: 14px; margin-top: 15px;">
-               ⭐ "Experience the warmth of premium tea, crafted with
-                love to refresh your mind and brighten your day." ⭐
-            </p>
+        <!-- Left-aligned editorial content -->
+        <div class="lp-hero__content">
+            <span class="lp-hero__eyebrow">— &nbsp; BREWED WITH INTENTION</span>
+            <h1 class="lp-hero__title">Tea for the<br><em>in-between.</em></h1>
+            <p class="lp-hero__sub">Small-batch leaves and mindful blends for turning a few quiet<br>minutes into something worth savouring.</p>
+            <div class="lp-hero__actions">
+                <button class="lp-btn lp-btn--primary" onclick="window.location.href='{% url 'menu' %}'">Explore the Menu &rarr;</button>
+            </div>
         </div>
 
-        <!-- Bottom category images -->
-        <div class="downside-image">
-            <img class="down-img" src="{% static 'images/down.jpg' %}"  alt="snacks" loading="lazy" onclick="window.location.href='{% url 'menu' %}?category=snacks'">
-            <img class="down-img" src="{% static 'images/down2.jpg' %}" alt="hot"    loading="lazy" onclick="window.location.href='{% url 'menu' %}?category=hot'">
-            <img class="down-img" src="{% static 'images/down3.jpg' %}" alt="cold"   loading="lazy" onclick="window.location.href='{% url 'menu' %}?category=cold'">
-        </div>
-
-    </div><!-- end .login-body -->
+    </div>
 
 </div><!-- end .login-page -->
+
+<!-- CSS is in static/css/style.css — LOGIN PAGE section -->
+
 
 <!-- Slide-in login / signup panel (fixed, outside the wrapper) -->
 <div id="auth-wrapper" class="glass-panel form-wrapper fade-in">
@@ -113,7 +104,7 @@
         {% if messages %}
             {% for message in messages %}
                 {% if 'forgot' in message.tags %}
-                    <div class="error-msg" style="color:#e74c3c; text-align:center; margin-top:10px; font-size:14px; padding:8px; background:#ffeaea; border-radius:8px;">
+                    <div class="error-msg" style="color:#b75f56; text-align:center; margin-top:10px; font-size:14px; padding:8px; background:#ffeaea; border-radius:8px;">
                         {{ message }}
                     </div>
                 {% endif %}
@@ -182,544 +173,25 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-    // Auto-open panel + switch to correct state on page load
-    document.addEventListener('DOMContentLoaded', function() {
+<!-- Login page JS -->
+<script src="{% static 'js/login.js' %}"></script>
 
+<script>
+    // Django-template conditional: must stay here because it uses server-side variables
+    document.addEventListener('DOMContentLoaded', function() {
         {% if show_otp %}
-            // OTP was sent — open panel on signup tab and show OTP input
             openLogin();
             switchAuthForm('signup-section');
             document.getElementById('signup-details').style.display = 'none';
             document.getElementById('signup-otp').style.display = 'block';
-
         {% elif error_message %}
-            // Error — open panel on signup tab to show the error message
             openLogin();
             switchAuthForm('signup-section');
-            
         {% elif forgot_error %}
-            // If there's a forgot password error, open that section
             openLogin();
             switchAuthForm('forgot-password-section');
         {% endif %}
-
-    });
-
-    // Helper to go back to the registration form from OTP step
-    function showSignupDetails() {
-        document.getElementById('signup-details').style.display = 'block';
-        document.getElementById('signup-otp').style.display = 'none';
-    }
-
-    // Clear cart on every fresh visit to the website (login page)
-    localStorage.removeItem("cart");
-
-    // ---- Hamburger / Mobile Nav ----
-    function toggleMobileMenu() {
-        const nav = document.getElementById('main-nav');
-        const btn = document.getElementById('hamburger-btn');
-        nav.classList.toggle('mobile-open');
-        btn.classList.toggle('open');
-    }
-
-    function closeMobileMenu() {
-        const nav = document.getElementById('main-nav');
-        const btn = document.getElementById('hamburger-btn');
-        nav.classList.remove('mobile-open');
-        btn.classList.remove('open');
-    }
-
-    // Close mobile menu when clicking outside it
-    // Also close the login panel when clicking outside it
-    document.addEventListener('click', function(e) {
-        const nav     = document.getElementById('main-nav');
-        const btn     = document.getElementById('hamburger-btn');
-        const panel   = document.getElementById('auth-wrapper');
-
-        // --- Close hamburger nav ---
-        if (nav.classList.contains('mobile-open') &&
-            !nav.contains(e.target) &&
-            !btn.contains(e.target)) {
-            closeMobileMenu();
-        }
-
-        // --- Close login/signup panel when clicking outside it ---
-        if (panel.classList.contains('active') &&
-            !panel.contains(e.target) &&
-            !e.target.closest('[onclick*="openLogin"]')) {
-            closeLogin();
-        }
-    });
-
-    // ==========================================
-    // Canvas Particle Disintegration Effect
-    // ==========================================
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Stop immediate submission
-            
-            const btn = form.querySelector('button[type="submit"]');
-            if(btn) {
-                btn.innerHTML = 'Wait...';
-                btn.disabled = true;
-            }
-
-            const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
-            
-            let canvases = [];
-            let allParticles = [];
-            
-            inputs.forEach(input => {
-                if (!input.value) return;
-                
-                const rect = input.getBoundingClientRect();
-                const canvas = document.createElement('canvas');
-                canvas.width = rect.width;
-                canvas.height = rect.height;
-                canvas.style.position = 'fixed'; // fixed to match bounding client rect
-                canvas.style.left = rect.left + 'px';
-                canvas.style.top = rect.top + 'px';
-                canvas.style.pointerEvents = 'none';
-                canvas.style.zIndex = '9999';
-                document.body.appendChild(canvas);
-                canvases.push(canvas);
-                
-                const ctx = canvas.getContext('2d', {willReadFrequently: true});
-                const style = window.getComputedStyle(input);
-                
-                // Draw text to match input exactly
-                ctx.font = style.font;
-                ctx.fillStyle = style.color;
-                ctx.textBaseline = 'middle';
-                
-                const paddingLeft = parseFloat(style.paddingLeft);
-                const height = rect.height;
-                
-                // Mask password
-                const text = input.type === 'password' ? '•'.repeat(input.value.length) : input.value;
-                ctx.fillText(text, paddingLeft, height / 2 + 1); // +1 tweak for middle baseline
-                
-                // Hide original text immediately
-                input.style.color = 'transparent';
-                
-                // Extract pixel data
-                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imgData.data;
-                
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                for (let y = 0; y < canvas.height; y += 2) {
-                    for (let x = 0; x < canvas.width; x += 2) {
-                        const idx = (y * canvas.width + x) * 4;
-                        if (data[idx + 3] > 128) { // If pixel is not highly transparent
-                            allParticles.push({
-                                x: x,
-                                y: y,
-                                vx: (Math.random() - 0.5) * 8, // horizontal scatter
-                                vy: (Math.random() - 0.5) * 8 - 2, // upward burst
-                                color: `rgba(${data[idx]}, ${data[idx+1]}, ${data[idx+2]}, 1)`,
-                                life: 1.0,
-                                canvas: canvas,
-                                ctx: ctx
-                            });
-                        }
-                    }
-                }
-            });
-            
-            // Animate particles
-            function animate() {
-                canvases.forEach(c => c.getContext('2d').clearRect(0, 0, c.width, c.height));
-                
-                let alive = false;
-                allParticles.forEach(p => {
-                    if (p.life <= 0) return;
-                    alive = true;
-                    
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.4; // gravity pull down
-                    p.life -= 0.02; // fade rate
-                    
-                    p.ctx.fillStyle = p.color.replace('1)', `${Math.max(0, p.life)})`);
-                    p.ctx.fillRect(p.x, p.y, 2.5, 2.5); // draw particle
-                });
-                
-                if (alive) {
-                    requestAnimationFrame(animate);
-                } else {
-                    form.submit();
-                }
-            }
-            
-            if (allParticles.length > 0) {
-                animate();
-            } else {
-                form.submit();
-            }
-            
-            // Safety timeout
-            setTimeout(() => { form.submit(); }, 1500);
-        });
-    });
-</script>
-
-<!-- Three.js Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-    // ==========================================
-    // 3D Steaming Cup Animation (Three.js)
-    // ==========================================
-    document.addEventListener('DOMContentLoaded', function() {
-        const container = document.getElementById('cup-3d-container');
-        if (!container) return;
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 3.5, 9); // Moved camera back to decrease the visual size of the cup and teapot
-        camera.lookAt(0, 1.0, 0);
-
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        container.appendChild(renderer.domElement);
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(5, 10, 5);
-        scene.add(dirLight);
-
-        // Dynamic Canvas Texture for Cup Design
-        const txCanvas = document.createElement('canvas');
-        txCanvas.width = 1024;
-        txCanvas.height = 512;
-        const ctx = txCanvas.getContext('2d');
-        
-        // Cream background
-        ctx.fillStyle = '#fdfaf5';
-        ctx.fillRect(0, 0, 1024, 512);
-        
-        // Draw decorations (hearts)
-        function drawHeart(x, y, size, color, rot) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(rot);
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(0, size/4);
-            ctx.bezierCurveTo(size/2, -size/2, size*1.5, size/3, 0, size);
-            ctx.bezierCurveTo(-size*1.5, size/3, -size/2, -size/2, 0, size/4);
-            ctx.fill();
-            ctx.restore();
-        }
-        
-        // Draw flowers on the upper side
-        function drawFlower(x, y, size, petalColor, centerColor) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.fillStyle = petalColor;
-            for(let p = 0; p < 5; p++) {
-                ctx.beginPath();
-                ctx.ellipse(0, -size/1.5, size/2.5, size, 0, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.rotate((Math.PI * 2) / 5);
-            }
-            ctx.fillStyle = centerColor;
-            ctx.beginPath();
-            ctx.arc(0, 0, size/2, 0, Math.PI*2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        const palette = ['#c8a68b', '#7e5a40', '#d8b99e', '#3a2718'];
-        const flowerPalette = ['#e07a5f', '#f4a261', '#81b29a', '#f2cc8f'];
-
-        // Flowers near the top border
-        for(let i=0; i<30; i++) {
-            drawFlower(
-                Math.random() * 1024, 
-                20 + Math.random() * 80, 
-                8 + Math.random() * 12, 
-                flowerPalette[Math.floor(Math.random() * flowerPalette.length)],
-                '#fdfaf5'
-            );
-        }
-
-        // Random hearts in the middle/bottom
-        for(let i=0; i<40; i++) {
-            drawHeart(
-                Math.random() * 1024, 
-                150 + Math.random() * 350, 
-                10 + Math.random() * 25, 
-                palette[Math.floor(Math.random() * palette.length)],
-                (Math.random() - 0.5) * Math.PI
-            );
-        }
-        
-        // Draw Text
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        // Upper side text
-        ctx.fillStyle = '#3d5a80';
-        ctx.font = 'italic bold 35px "Georgia", serif';
-        ctx.fillText('Bloom & Brew', 512, 60);
-
-        // Main text
-        ctx.fillStyle = '#2b1b12';
-        ctx.font = 'bold 90px "Arial Rounded MT Bold", Arial, sans-serif';
-        ctx.fillText('COFFEE', 512, 220);
-        
-        ctx.font = 'italic 45px "Georgia", serif';
-        ctx.fillText('is my', 512, 290);
-        
-        ctx.font = 'bold 75px "Brush Script MT", "Comic Sans MS", cursive';
-        ctx.fillText('love language', 512, 360);
-        
-        // Add tiny dots
-        for(let i=0; i<80; i++) {
-            ctx.beginPath();
-            ctx.arc(Math.random()*1024, Math.random()*512, Math.random()*4, 0, Math.PI*2);
-            ctx.fillStyle = palette[Math.floor(Math.random()*palette.length)];
-            ctx.fill();
-        }
-
-        const cupTexture = new THREE.CanvasTexture(txCanvas);
-        cupTexture.wrapS = THREE.RepeatWrapping;
-        cupTexture.repeat.set(1, 1);
-        cupTexture.offset.set(0.25, 0); // Rotate texture so text faces camera
-
-        // The Cup (Tapered Cylinder)
-        const cupGeometry = new THREE.CylinderGeometry(1.3, 0.9, 2.5, 64, 1, true); // Open top, smoother edges
-        const cupMaterial = new THREE.MeshPhongMaterial({ 
-            map: cupTexture,
-            shininess: 40,
-            side: THREE.DoubleSide
-        });
-        const cup = new THREE.Mesh(cupGeometry, cupMaterial);
-        cup.position.y = -0.5;
-        scene.add(cup);
-
-        // Cup Rim (Torus for smooth top edge)
-        const rimMaterial = new THREE.MeshPhongMaterial({ color: '#fdfaf5', shininess: 40 });
-        const rimGeometry = new THREE.TorusGeometry(1.3, 0.04, 16, 64);
-        const rim = new THREE.Mesh(rimGeometry, rimMaterial);
-        rim.position.y = 0.75;
-        rim.rotation.x = Math.PI / 2;
-        scene.add(rim);
-
-        // The Liquid (Tea)
-        const liquidLevel = 0.2;
-        const liquidTopY = () => cup.position.y + liquidLevel;
-        const liquidGeometry = new THREE.CylinderGeometry(1.15, 1.15, 0.1, 32);
-        const liquidMaterial = new THREE.MeshPhongMaterial({ color: 0xa0522d });
-        const liquid = new THREE.Mesh(liquidGeometry, liquidMaterial);
-        liquid.position.y = liquidTopY();
-        scene.add(liquid);
-
-        // Dynamic Canvas Texture for Teapot Design
-        const tpCanvas = document.createElement('canvas');
-        tpCanvas.width = 1024;
-        tpCanvas.height = 512;
-        const tpCtx = tpCanvas.getContext('2d');
-        
-        // Background color for Teapot
-        tpCtx.fillStyle = '#fdfaf5';
-        tpCtx.fillRect(0, 0, 1024, 512);
-
-        // Flowers for Teapot
-        function drawTpFlower(x, y, size, petalColor, centerColor) {
-            tpCtx.save();
-            tpCtx.translate(x, y);
-            tpCtx.fillStyle = petalColor;
-            for(let p = 0; p < 5; p++) {
-                tpCtx.beginPath();
-                tpCtx.ellipse(0, -size/1.5, size/2.5, size, 0, 0, Math.PI * 2);
-                tpCtx.fill();
-                tpCtx.rotate((Math.PI * 2) / 5);
-            }
-            tpCtx.fillStyle = centerColor;
-            tpCtx.beginPath();
-            tpCtx.arc(0, 0, size/2, 0, Math.PI*2);
-            tpCtx.fill();
-            tpCtx.restore();
-        }
-
-        // Draw scattered flowers
-        for(let i=0; i<60; i++) {
-            drawTpFlower(
-                Math.random() * 1024, 
-                Math.random() * 512, 
-                15 + Math.random() * 20, 
-                flowerPalette[Math.floor(Math.random() * flowerPalette.length)],
-                '#fdfaf5'
-            );
-        }
-
-        // Draw Quote on Teapot
-        tpCtx.textAlign = 'center';
-        tpCtx.textBaseline = 'middle';
-        tpCtx.fillStyle = '#3d5a80';
-        tpCtx.font = 'italic bold 55px "Georgia", serif';
-        tpCtx.fillText('Brewing', 512, 220);
-        tpCtx.fillStyle = '#2b1b12';
-        tpCtx.font = 'bold 85px "Brush Script MT", "Comic Sans MS", cursive';
-        tpCtx.fillText('Happiness', 512, 300);
-
-        const tpTexture = new THREE.CanvasTexture(tpCanvas);
-        tpTexture.wrapS = THREE.RepeatWrapping;
-        tpTexture.repeat.set(1, 1);
-        tpTexture.offset.set(0.1, 0); // Adjust so text faces camera
-
-        // The Teapot Group
-        const teapotGroup = new THREE.Group();
-        // Moved the teapot closer to the center so the spout hangs directly over the middle of the cup
-        teapotGroup.position.set(-1.0, 2.5, 0);
-        scene.add(teapotGroup);
-
-        // Teapot Body
-        const tpBodyGeo = new THREE.SphereGeometry(1.2, 32, 32);
-        const tpMaterial = new THREE.MeshPhongMaterial({ map: tpTexture, shininess: 80 });
-        const tpBody = new THREE.Mesh(tpBodyGeo, tpMaterial);
-        teapotGroup.add(tpBody);
-
-        // Teapot Lid
-        const tpLidGeo = new THREE.SphereGeometry(0.6, 32, 32);
-        const tpLid = new THREE.Mesh(tpLidGeo, tpMaterial);
-        tpLid.position.set(0.6, 0.8, 0);
-        teapotGroup.add(tpLid);
-
-        // Teapot Spout
-        const tpSpoutGeo = new THREE.ConeGeometry(0.2, 1.5, 16);
-        const tpSpout = new THREE.Mesh(tpSpoutGeo, tpMaterial);
-        tpSpout.position.set(1.2, -0.2, 0);
-        tpSpout.rotation.z = -Math.PI / 2.5;
-        teapotGroup.add(tpSpout);
-
-        // Steam Particles
-        const steamParticles = [];
-        const pMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
-        const pGeometry = new THREE.CircleGeometry(0.3, 8);
-
-        for (let i = 0; i < 15; i++) {
-            const p = new THREE.Mesh(pGeometry, pMaterial.clone());
-            p.position.set((Math.random() - 0.5), liquidTopY() + Math.random() * 2, (Math.random() - 0.5));
-            p.userData = { age: Math.random(), speed: 0.01 + Math.random() * 0.02, phase: Math.random() * Math.PI * 2 };
-            steamParticles.push(p);
-            scene.add(p);
-        }
-
-        // Pouring Drops (Spheres)
-        const pourDrops = [];
-        const dropMaterial = new THREE.MeshPhongMaterial({ color: 0xc85a17, shininess: 50 });
-        const dropGeo = new THREE.SphereGeometry(0.12, 16, 16);
-        
-        for(let i=0; i<40; i++) {
-            const drop = new THREE.Mesh(dropGeo, dropMaterial);
-            drop.userData = { active: false, vy: 0 };
-            drop.visible = false;
-            pourDrops.push(drop);
-            scene.add(drop);
-        }
-
-        // Animation Loop
-        const clock = new THREE.Clock();
-        function animate() {
-            requestAnimationFrame(animate);
-            const now = clock.getElapsedTime();
-
-            // Automatic 5-second cycle (Pour for 2s, Rest for 3s)
-            const cycle = now % 5;
-            const isPouring = cycle < 2.2;
-
-            // Tilt Teapot smoothly based on cycle
-            const targetRotation = isPouring ? -Math.PI / 3.5 : -Math.PI / 8;
-            teapotGroup.rotation.z += (targetRotation - teapotGroup.rotation.z) * 0.1;
-
-            // Calculate Spout Tip World Position
-            const spoutTip = new THREE.Vector3(1.8, -0.6, 0);
-            spoutTip.applyMatrix4(teapotGroup.matrixWorld);
-
-            // Spawn Drops
-            if (isPouring) {
-                const inactiveDrop = pourDrops.find(d => !d.userData.active);
-                if (inactiveDrop && Math.random() > 0.2) {
-                    inactiveDrop.position.copy(spoutTip);
-                    // Add a tiny bit of horizontal momentum towards the exact center (x=0, z=0)
-                    inactiveDrop.userData.active = true;
-                    inactiveDrop.userData.vx = (0 - spoutTip.x) * 0.02 + (Math.random() - 0.5) * 0.02;
-                    inactiveDrop.userData.vy = -0.02;
-                    inactiveDrop.userData.vz = (Math.random() - 0.5) * 0.02;
-                    inactiveDrop.visible = true;
-                }
-            }
-
-            // Animate Drops
-            pourDrops.forEach(drop => {
-                if (drop.userData.active) {
-                    drop.position.x += drop.userData.vx;
-                    drop.position.y += drop.userData.vy;
-                    drop.position.z += drop.userData.vz;
-                    drop.userData.vy -= 0.008; // Gravity
-                    
-                    // Hit liquid surface
-                    if (drop.position.y <= liquidTopY()) {
-                        drop.userData.active = false;
-                        drop.visible = false;
-                        liquid.scale.y = 1.0 + Math.random() * 0.4; // Ripple effect
-                    }
-                }
-            });
-            liquid.scale.y += (1.0 - liquid.scale.y) * 0.1; // Settle liquid
-
-            // Rotate Cup slowly
-            cup.rotation.y += 0.002;
-            rim.rotation.z += 0.002;
-            liquid.rotation.y += 0.002;
-
-            // Animate Steam
-            steamParticles.forEach(s => {
-                if (s.userData.age === 0 || s.position.y > liquidTopY() + 2.5) {
-                    s.position.set((Math.random() - 0.5), liquidTopY() + 0.1, (Math.random() - 0.5));
-                    s.userData.age = 0.001;
-                }
-                s.userData.age += 0.008;
-                s.position.y += s.userData.speed;
-                s.position.x += Math.sin(s.userData.phase + now * 2) * 0.004;
-                
-                const fadeOut = 1 - Math.min(1, (s.position.y - liquidTopY()) / 2.5);
-                s.material.opacity = Math.min(0.2, s.userData.age) * fadeOut;
-                s.scale.setScalar(0.8 + s.userData.age * 1.5);
-                s.lookAt(camera.position); 
-            });
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // Handle Resize
-        window.addEventListener('resize', () => {
-            if (!container) return;
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
     });
 </script>
 {% endblock %}
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('auth_required') === '1') {
-            openLogin();
-            const loginMsgBox = document.querySelector('#login-section .message-box');
-            if (loginMsgBox) {
-                loginMsgBox.innerHTML = '<p style="color: #ff4757; font-weight: bold; background: rgba(255, 71, 87, 0.1); padding: 10px; border-radius: 8px; margin-top: 15px;">?? Please register or login first!</p>';
-            }
-        }
-    });
-</script>
