@@ -145,9 +145,12 @@ Retrieved information:
             
     messages.append(HumanMessage(content=question))
 
-    response = _get_llm().invoke(messages)
-    
-    # Save bot response to history
-    save_history(user_id, "bot", response.content)
+    # 5) Generate Response (Stream)
+    full_response = ""
+    for chunk in _get_llm().stream(messages):
+        if chunk.content:
+            full_response += chunk.content
+            yield chunk.content
 
-    return response.content
+    # 6) Save bot response to history
+    save_history(user_id, "bot", full_response)

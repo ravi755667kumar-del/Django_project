@@ -13,6 +13,7 @@ urlpatterns=[
     path("chat/", views.chatbot, name="chat"),
     path('search_menu/', views.search_menu, name='search_menu'),
     path('cart/', views.cart, name='cart'),
+    path('update_cart/', views.update_cart, name='update_cart'),
     path('order/', views.order, name='order'),
     path('payment/', views.payment, name='payment'),
     path('success/', views.success, name='success'),

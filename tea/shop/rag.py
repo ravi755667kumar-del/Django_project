@@ -1,69 +1,60 @@
 """
-Lightweight RAG replacement.
+rag.py  —  Semantic PDF search using the locally cached HuggingFace model.
 
-Instead of FastEmbed + ChromaDB (which require 1GB+ RAM and download ONNX models),
-we use a simple TF-IDF-style keyword search over the pre-extracted plain-text
-knowledge base. This is fast, uses ~0 extra RAM, and needs no extra packages.
+- Uses sentence-transformers/all-MiniLM-L6-v2 (cached in /hf_model_cache/).
+- Loads the Chroma vector index from /chroma_db/ (built by build_index.py).
+- No internet connection required after the first build.
 """
-import os
-import re
+
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+VECTOR_DB_PATH = BASE_DIR / "chroma_db"
+MODEL_CACHE_PATH = BASE_DIR / "hf_model_cache"
 
-# Path to the pre-extracted plain-text knowledge base
-KB_PATH = BASE_DIR / "documents" / "brew_haven_kb.txt"
+# --- Lazy load: only initialized on first chatbot use ---
+_retriever = None
 
-# Load once at module import — it's just a tiny text file (~2 KB)
-_kb_text = ""
-_kb_paragraphs = []
+def _get_retriever():
+    global _retriever
+    if _retriever is None:
+        from langchain_huggingface import HuggingFaceEmbeddings
+        from langchain_chroma import Chroma
 
-def _load_kb():
-    global _kb_text, _kb_paragraphs
-    if _kb_paragraphs:
-        return  # already loaded
-    if KB_PATH.exists():
-        _kb_text = KB_PATH.read_text(encoding="utf-8")
-        # Split into paragraphs (separated by blank lines)
-        _kb_paragraphs = [p.strip() for p in re.split(r"\n\s*\n", _kb_text) if p.strip()]
-    else:
-        _kb_text = ""
-        _kb_paragraphs = []
+        # Load the model entirely from local disk cache — no internet needed
+        embedding = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            cache_folder=str(MODEL_CACHE_PATH),
+            model_kwargs={"device": "cpu"},
+            encode_kwargs={"normalize_embeddings": True},
+        )
+
+        if not VECTOR_DB_PATH.exists():
+            raise RuntimeError(
+                f"Chroma index not found at {VECTOR_DB_PATH}. "
+                "Please run: python shop/build_index.py"
+            )
+
+        db = Chroma(
+            persist_directory=str(VECTOR_DB_PATH),
+            embedding_function=embedding,
+        )
+        _retriever = db.as_retriever(search_kwargs={"k": 3})
+
+    return _retriever
 
 
-def _score(paragraph: str, query_words: list[str]) -> int:
-    """Count how many query words appear in the paragraph (case-insensitive)."""
-    para_lower = paragraph.lower()
-    return sum(1 for w in query_words if w in para_lower)
-
-
-def search_pdf(question: str, k: int = 3) -> str:
+def search_pdf(question: str) -> str:
     """
-    Return the top-k most relevant paragraphs from the knowledge base
-    for the given question, as a single context string.
+    Return the top-3 most relevant chunks from the PDF knowledge base
+    for the given question, using semantic (embedding) similarity.
+    Falls back to empty string if the index is not yet built.
     """
-    _load_kb()
-
-    if not _kb_paragraphs:
+    try:
+        retriever = _get_retriever()
+        docs = retriever.invoke(question)
+        return "\n\n".join(doc.page_content for doc in docs)
+    except Exception as e:
+        print(f"[RAG] Warning: Could not retrieve from Chroma — {e}")
         return ""
 
-    # Tokenise the question into meaningful words (ignore short stop words)
-    stop = {"a", "an", "the", "is", "in", "on", "at", "to", "do", "i", "me",
-            "my", "we", "you", "it", "of", "for", "and", "or", "be", "can",
-            "are", "was", "what", "how", "when", "where", "which", "who"}
-    query_words = [w for w in re.findall(r"[a-z]+", question.lower()) if w not in stop and len(w) > 2]
-
-    if not query_words:
-        # Fall back: return the first k paragraphs
-        return "\n\n".join(_kb_paragraphs[:k])
-
-    # Score every paragraph and pick the top k
-    scored = [(para, _score(para, query_words)) for para in _kb_paragraphs]
-    scored.sort(key=lambda x: x[1], reverse=True)
-
-    # Take top-k with at least 1 matching word; if none match, return first k
-    top = [para for para, score in scored[:k] if score > 0]
-    if not top:
-        top = [para for para, _ in scored[:k]]
-
-    return "\n\n".join(top)

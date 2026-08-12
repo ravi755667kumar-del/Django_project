@@ -21,6 +21,12 @@
     {% block content %}
     {% endblock %}
 
+    <script>
+        // Provide authentication state and backend cart to Javascript
+        const IS_LOGGED_IN = {% if request.session.customer_id %}true{% else %}false{% endif %};
+        // Server cart data (defaults to empty array if none exists)
+        const SERVER_CART = {{ request.session.cart_data|default:"[]"|safe }};
+    </script>
     <script src="{% static 'js/script.js' %}" defer></script>
 
     {% block extra_scripts %}

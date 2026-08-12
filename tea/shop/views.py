@@ -7,6 +7,9 @@ from django.http import JsonResponse
 from .chat import ask_bot
 from django.views.decorators.csrf import csrf_exempt
 import json
+import urllib.parse
+from django.http import JsonResponse
+
 from django.contrib.auth.models import User
 from django.contrib.auth import login as django_admin_login
 import random
@@ -119,6 +122,66 @@ def login(request):
             # Page returns instantly
             return render(request, "login.html", {"show_otp": True, "email": email})
 
+
+        # ------------------ RESEND OTP ------------------
+        elif action == "resend_otp":
+            temp_user = request.session.get('temp_user')
+            if not temp_user:
+                return render(request, "login.html", {
+                    "error_message": "Session expired. Please register again."
+                })
+            
+            # Generate new OTP
+            otp = str(random.randint(100000, 999999))
+            temp_user['otp'] = otp
+            temp_user['otp_time'] = time.time()
+            request.session['temp_user'] = temp_user
+            
+            email = temp_user['email']
+            name = temp_user['name']
+            
+            # Send OTP via Brevo API
+            def _send_otp_email_resend():
+                url = "https://api.brevo.com/v3/smtp/email"
+                api_key = os.environ.get("BREVO_API_KEY", "").strip()
+                headers = {
+                    "accept": "application/json",
+                    "api-key": api_key,
+                    "content-type": "application/json",
+                }
+                payload = {
+                    "sender": {"email": "ravi755667kumar@gmail.com", "name": "Brew Haven"},
+                    "to": [{"email": email}],
+                    "subject": "Your Brew Haven Verification Code (Resent)",
+                    "htmlContent": f"""
+                        <div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;
+                                    padding:30px;border:1px solid #e0e0e0;border-radius:10px;">
+                            <h2 style="color:#5c3317;text-align:center;">&#9749; Brew Haven</h2>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p>Hi <strong>{name}</strong>,</p>
+                            <p>Here is your new verification code:</p>
+                            <div style="text-align:center;margin:25px 0;">
+                                <span style="font-size:38px;font-weight:bold;color:#5c3317;
+                                             letter-spacing:10px;background:#fff3e0;
+                                             padding:12px 28px;border-radius:8px;
+                                             border:2px dashed #5c3317;">{otp}</span>
+                            </div>
+                            <p style="color:#999;font-size:13px;text-align:center;">
+                                &#x23F1; Valid for <strong>1 minute</strong>. Do not share it.
+                            </p>
+                            <hr style="border:none;border-top:1px solid #ddd;"/>
+                            <p style="color:#bbb;font-size:12px;text-align:center;">&copy; Brew Haven Team</p>
+                        </div>""",
+                }
+                try:
+                    requests.post(url, json=payload, headers=headers, timeout=15)
+                except Exception:
+                    pass
+
+            threading.Thread(target=_send_otp_email_resend, daemon=True).start()
+
+            return render(request, "login.html", {"show_otp": True, "email": email, "error_message": "A new OTP has been sent!"})
+
         # ------------------ VERIFY OTP ------------------
         elif action == "verify_otp":
             entered_otp = request.POST.get("otp", "").strip()
@@ -159,8 +222,7 @@ def login(request):
                 request.session.flush()
                 request.session["customer_id"]   = customer.id
                 request.session["customer_name"] = customer.name
-
-                return redirect("menu")
+                return _handle_login_success(request)
             else:
                 return render(request, "login.html", {
                     "show_otp": True,
@@ -188,7 +250,7 @@ def login(request):
                     request.session.flush()
                     request.session["customer_id"]   = customer.id
                     request.session["customer_name"] = customer.name
-                    return redirect("menu")
+                    return _handle_login_success(request)
                 
                 # Fallback to upgrade existing plain-text passwords
                 elif customer.password == password:
@@ -198,7 +260,7 @@ def login(request):
                     request.session.flush()
                     request.session["customer_id"]   = customer.id
                     request.session["customer_name"] = customer.name
-                    return redirect("menu")
+                    return _handle_login_success(request)
                 
                 else:
                     return render(request, "login.html", {
@@ -212,6 +274,22 @@ def login(request):
 
     return render(request, "login.html")
 
+
+
+def _handle_login_success(request):
+    guest_cart = request.COOKIES.get("guest_cart")
+    if guest_cart:
+        try:
+            decoded = urllib.parse.unquote(guest_cart)
+            # Store in session
+            request.session["cart_data"] = decoded
+        except Exception:
+            pass
+            
+    response = redirect("menu")
+    if guest_cart:
+        response.delete_cookie("guest_cart")
+    return response
 
 def logout_view(request):
     request.session.flush()
@@ -391,8 +469,13 @@ def order(request):
 
     if request.method == "POST":
         mobile    = request.POST.get("customer_mobile")
-        cart_data = request.POST.get("cart_data")
-        cart      = json.loads(cart_data)
+        
+        # Pull the securely saved cart from the session database instead of the client payload!
+        session_cart_data = request.session.get("cart_data", "[]")
+        cart = json.loads(session_cart_data)
+        
+        if not cart:
+            return redirect("cart")
 
         # Get the logged-in customer object from session
         customer_id = request.session.get("customer_id")
@@ -430,15 +513,25 @@ def order(request):
         return redirect("payment")
 
     return render(request, "order.html")
+from django.http import StreamingHttpResponse
+
 @csrf_exempt
-def chatbot(request):
 
+@csrf_exempt
+def update_cart(request):
     if request.method == "POST":
+        try:
+            cart_data = json.loads(request.body)
+            request.session['cart_data'] = json.dumps(cart_data)
+            return JsonResponse({"status": "ok"})
+        except json.JSONDecodeError:
+            pass
+    return JsonResponse({"status": "error"})
 
+def chatbot(request):
+    if request.method == "POST":
         data = json.loads(request.body)
-
         question = data.get("message")
-
 
         # Get or create session key to use as user_id for memory
         if not request.session.session_key:
@@ -446,15 +539,18 @@ def chatbot(request):
         user_id = request.session.session_key
         customer_name = request.session.get("customer_name", "Guest")
 
-        answer = ask_bot(question, user_id, customer_name)
+        def event_stream():
+            for chunk in ask_bot(question, user_id, customer_name):
+                # Send SSE formatted data. json.dumps escapes newlines properly.
+                yield f"data: {json.dumps(chunk)}\n\n"
 
-        return JsonResponse({
-            "reply": answer
-        })
+        response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+        # Ensure it doesn't get buffered by proxy/nginx
+        response['Cache-Control'] = 'no-cache'
+        response['X-Accel-Buffering'] = 'no'
+        return response
 
-    return JsonResponse({
-        "reply": "Invalid request"
-    })
+    return JsonResponse({"reply": "Invalid request"})
 def order_history(request):
     if not is_logged_in(request):
         return redirect("login")

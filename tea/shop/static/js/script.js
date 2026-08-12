@@ -1,6 +1,36 @@
-// ---------- AUTHENTICATION ----------
-// Load cart from localStorage
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+// ---------- AUTHENTICATION & CART STORAGE ----------
+let cart = [];
+if (typeof IS_LOGGED_IN !== 'undefined') {
+    if (IS_LOGGED_IN) {
+        cart = SERVER_CART || [];
+    } else {
+        const cartCookie = getCookie("guest_cart");
+        if (cartCookie) {
+            try {
+                cart = JSON.parse(cartCookie);
+            } catch (e) {
+                cart = [];
+            }
+        }
+    }
+} else {
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart() {
+    if (typeof IS_LOGGED_IN !== 'undefined' && IS_LOGGED_IN) {
+        fetch("/update_cart/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify(cart)
+        }).catch(err => console.error("Cart sync failed:", err));
+    } else {
+        document.cookie = "guest_cart=" + encodeURIComponent(JSON.stringify(cart)) + "; path=/;";
+    }
+}
 
 // Update cart count when page loads
 updateCartCount();
@@ -153,7 +183,7 @@ function addToCart(name, price, btn) {
     }
 
     // Save cart
-    localStorage.setItem("cart", JSON.stringify(cart));
+    saveCart();
 
     // Update cart count
     updateCartCount();
@@ -218,7 +248,6 @@ function toggleChat() {
     chatWindow.classList.toggle("open");
 }
 
-// Helper: read a cookie value by name (needed for CSRF token)
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -234,125 +263,106 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Send Message
-function sendMessage() {
-
+async function sendMessage() {
     const input = document.getElementById("userMessage");
-
     const message = input.value.trim();
 
-    if (message === "") {
-        return;
-    }
+    if (message === "") return;
 
     const chatBox = document.getElementById("chat-box");
-
     chatBox.innerHTML += `<div class="user-message">${message}</div>`;
-
     chatBox.innerHTML += `<div class="bot-message" id="typing">🤖 Typing...</div>`;
-
     chatBox.scrollTop = chatBox.scrollHeight;
-
     input.value = "";
 
-    fetch("/chat/", {
+    try {
+        const response = await fetch("/chat/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({ message: message })
+        });
 
-        method: "POST",
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        
+        const typingEl = document.getElementById("typing");
+        if (typingEl) typingEl.remove();
 
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": getCookie("csrftoken")
-        },
+        const botBubble = document.createElement('div');
+        botBubble.className = 'bot-message';
+        botBubble.innerHTML = '🤖 ';
+        chatBox.appendChild(botBubble);
 
-        body: JSON.stringify({
-            message: message
-        })
-
-    })
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        document.getElementById("typing").remove();
-
-        chatBox.innerHTML += `<div class="bot-message">🤖 ${data.reply}</div>`;
-
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-    });
-
+        let buffer = '';
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            buffer += decoder.decode(value, {stream: true});
+            
+            let newlineIndex;
+            while ((newlineIndex = buffer.indexOf('\n\n')) !== -1) {
+                const chunk = buffer.slice(0, newlineIndex);
+                buffer = buffer.slice(newlineIndex + 2);
+                
+                if (chunk.startsWith('data: ')) {
+                    const dataStr = chunk.substring(6);
+                    try {
+                        const data = JSON.parse(dataStr);
+                        const htmlChunk = data.replace(/\n/g, '<br>');
+                        botBubble.innerHTML += htmlChunk;
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    } catch (e) {
+                        console.error("Error:", e);
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+        const typingEl = document.getElementById("typing");
+        if (typingEl) typingEl.remove();
+        chatBox.innerHTML += `<div class="bot-message" style="color: red;">🤖 Connection error.</div>`;
+    }
 }
 
 function updateCartCount() {
-
     let totalItems = 0;
-
-    cart.forEach(function(item) {
-
-        totalItems += item.quantity;
-
-    });
-
+    cart.forEach(function(item) { totalItems += item.quantity; });
     let cartCount = document.getElementById("cart-count");
-
-    if (cartCount) {
-
-        cartCount.innerText = totalItems;
-
-    }
-
+    if (cartCount) cartCount.innerText = totalItems;
 }
+
 function displayCart() {
-
     let container = document.getElementById("cart-items-container");
-
-    if (!container) {
-        return;
-    }
-
+    if (!container) return;
     container.innerHTML = "";
-
     let grandTotal = 0;
-
     cart.forEach(function(item, index) {
-
         let total = item.price * item.quantity;
-
         grandTotal += total;
-
         container.innerHTML += `
             <div class="cart-item">
-
                 <div>${item.name}</div>
-
                 <div>
-
                     <button onclick="decreaseQuantity(${index})">-</button>
-
                     ${item.quantity}
-
                     <button onclick="increaseQuantity(${index})">+</button>
-
                 </div>
-
                 <div>₹${item.price}</div>
-
                 <div>₹${total}</div>
-
-            </div>
-        `;
-
+            </div>`;
     });
-
     document.getElementById("cart-total-price").innerText = grandTotal;
-
 }
+
 function increaseQuantity(index){
-
     cart[index].quantity++;
+    saveCart();
 
-    localStorage.setItem("cart", JSON.stringify(cart));
 
     updateCartCount();
 
@@ -369,7 +379,7 @@ function decreaseQuantity(index){
 
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+    saveCart();
 
     updateCartCount();
 
@@ -554,3 +564,4 @@ document.addEventListener('keydown', e => {
         }
     }
 });
+

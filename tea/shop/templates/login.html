@@ -44,6 +44,94 @@
 
     </div>
 
+    <!-- ── Categories Showcase ── -->
+    <section class="lp-categories">
+        <h2 class="lp-section-title">Curated for Your Taste</h2>
+        <div class="lp-grid">
+            <div class="lp-card">
+                <div class="lp-card__img-wrapper">
+                    <img src="{% static 'images/down.jpg' %}" alt="Fresh Snacks">
+                </div>
+                <h3>Fresh Snacks</h3>
+                <p>Baked daily with organic ingredients.</p>
+            </div>
+            <div class="lp-card">
+                <div class="lp-card__img-wrapper">
+                    <img src="{% static 'images/down2.jpg' %}" alt="Premium Tea">
+                </div>
+                <h3>Premium Tea</h3>
+                <p>Hand-picked from high-altitude estates.</p>
+            </div>
+            <div class="lp-card">
+                <div class="lp-card__img-wrapper">
+                    <img src="{% static 'images/down3.jpg' %}" alt="Craft Coffee">
+                </div>
+                <h3>Craft Coffee</h3>
+                <p>100% Arabica beans, freshly roasted.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Ingredients / Instructions ── -->
+    <section class="lp-instructions">
+        <h2 class="lp-section-title">The Art of the Brew</h2>
+        <div class="lp-instructions__content">
+            <div class="lp-instruction-item">
+                <span class="lp-icon">🌿</span>
+                <div class="lp-text">
+                    <h4>The Tea Process</h4>
+                    <p>Sourced from the finest high-altitude estates, our tea leaves are hand-picked and naturally dried to preserve their delicate antioxidants and rich flavor profile. Steamed to perfection.</p>
+                </div>
+            </div>
+            <div class="lp-instruction-item">
+                <span class="lp-icon">☕</span>
+                <div class="lp-text">
+                    <h4>The Coffee Process</h4>
+                    <p>We use 100% Arabica beans, ethically sourced from fair-trade farms. They are freshly roasted in-house every morning to ensure the perfect crema and an unforgettable aroma.</p>
+                </div>
+            </div>
+            <div class="lp-instruction-item">
+                <span class="lp-icon">🥐</span>
+                <div class="lp-text">
+                    <h4>The Snack Process</h4>
+                    <p>Baked fresh daily in our kitchen using organic flour, real butter, and zero artificial preservatives. Each pastry is crafted by hand for a flawless crisp and tender inside.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Why Choose Us / Features ── -->
+    <section class="lp-features">
+        <h2 class="lp-section-title">Why Choose Brew Haven</h2>
+        <div class="lp-features-grid">
+            <div class="lp-feature-card">
+                <span class="lp-feature-icon">⚡</span>
+                <h3>Fast Ordering</h3>
+                <p>Skip the line. Order ahead with just a few clicks and your brew will be ready when you arrive.</p>
+            </div>
+            <div class="lp-feature-card">
+                <span class="lp-feature-icon">💳</span>
+                <h3>Secure Payment</h3>
+                <p>Pay seamlessly and securely online with UPI, cards, and digital wallets. Zero friction.</p>
+            </div>
+            <div class="lp-feature-card">
+                <span class="lp-feature-icon">🤖</span>
+                <h3>AI Chatbot Support</h3>
+                <p>Got questions? Our intelligent 24/7 AI chatbot is always here to help you navigate the menu.</p>
+            </div>
+            <div class="lp-feature-card">
+                <span class="lp-feature-icon">✨</span>
+                <h3>Smart Recommendations</h3>
+                <p>Our Machine Learning engine recommends the perfect drink based on the current weather and your taste.</p>
+            </div>
+            <div class="lp-feature-card">
+                <span class="lp-feature-icon">🥗</span>
+                <h3>Veg & Non-Veg Options</h3>
+                <p>A diverse menu catering to all dietary preferences, prepared safely and separately for your peace of mind.</p>
+            </div>
+        </div>
+    </section>
+
 </div><!-- end .login-page -->
 
 <!-- CSS is in static/css/style.css — LOGIN PAGE section -->
@@ -130,7 +218,9 @@
                     <label for="signupEmail">Email Address</label>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="signupPassword" name="password" required>
+                    <input type="password" id="signupPassword" name="password" required 
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                           title="Must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character">
                     <label for="signupPassword">Password</label>
                 </div>
                 <button type="submit" class="btn">Send OTP →</button>
@@ -154,8 +244,21 @@
                 <button type="submit" class="btn">Verify & Create Account</button>
             </form>
             <div class="toggle-links">
-                <p><span onclick="showSignupDetails()">← Change email</span></p>
+                <p>
+                    <span onclick="showSignupDetails()">← Change email</span> | 
+                    <span onclick="resendOtp()">Resend OTP ↻</span>
+                </p>
             </div>
+            
+            <form id="resendOtpForm" method="POST" action="{% url 'login' %}" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="resend_otp">
+            </form>
+            <script>
+                function resendOtp() {
+                    document.getElementById('resendOtpForm').submit();
+                }
+            </script>
         </div>
 
         {% if error_message %}
