@@ -145,10 +145,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-# code for the cahes----
+# CACHES configuration
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "brew-haven-cache",
     }
 }
+
+# Session Configuration (Strict persistent login valid for 2 days = 172800 seconds)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 172800  # 2 days in seconds (48 hours)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Persist across browser reopens for 2 days
+SESSION_SAVE_EVERY_REQUEST = False  # Requires re-authentication after 2 days from login

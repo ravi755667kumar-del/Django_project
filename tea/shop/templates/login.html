@@ -147,8 +147,8 @@
             {% csrf_token %}
             <input type="hidden" name="action" value="login">
             <div class="input-group">
-                <input type="email" id="loginEmail" name="email" required autocomplete="off">
-                <label for="loginEmail">Email Address</label>
+                <input type="text" id="loginEmail" name="email" required autocomplete="off">
+                <label for="loginEmail">Username or Email Address</label>
             </div>
             <div class="input-group">
                 <input type="password" id="loginPassword" name="password" required>

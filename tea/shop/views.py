@@ -235,10 +235,14 @@ def login(request):
             email    = request.POST.get("email")
             password = request.POST.get("password")
 
-            # Check if this matches a Django Admin Superuser
-            admin_user = User.objects.filter(email=email, is_superuser=True).first()
+            # Check if this matches a Django Admin Superuser / Staff (by username or email)
+            admin_user = User.objects.filter(
+                Q(email=email) | Q(username=email),
+                Q(is_superuser=True) | Q(is_staff=True)
+            ).first()
             if admin_user and admin_user.check_password(password):
                 django_admin_login(request, admin_user)
+                request.session.set_expiry(172800)  # Valid for 2 days
                 return redirect("/admin/")
 
             try:
@@ -277,6 +281,9 @@ def login(request):
 
 
 def _handle_login_success(request):
+    # Set session database expiry to 2 days (172800 seconds)
+    request.session.set_expiry(172800)
+    
     guest_cart = request.COOKIES.get("guest_cart")
     if guest_cart:
         try:
