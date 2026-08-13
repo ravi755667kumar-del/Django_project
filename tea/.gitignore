@@ -5,3 +5,4 @@ __pycache__/
 __pycache__/
 *.pyc
 
+hf_model_cache/
