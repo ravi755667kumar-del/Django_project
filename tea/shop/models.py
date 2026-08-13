@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.shortcuts import render
 
 
 
@@ -59,10 +58,3 @@ class Order_data(models.Model):
 
     def __str__(self):
         return self.item_name
-
-def order_history(request):
-    orders = Order_data.objects.all().order_by("-Order_data_date")
-
-    return render(request, "order_history.html", {
-        "orders": orders
-    })

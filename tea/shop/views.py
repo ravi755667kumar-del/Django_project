@@ -1,29 +1,27 @@
-from django.shortcuts import render, redirect
-from django.db import IntegrityError
-from .models import Customer, Drink, Snacks
-from .models import Order_data
-from django.db.models import Q
-from django.http import JsonResponse
-from .chat import ask_bot
-from django.views.decorators.csrf import csrf_exempt
+import os
 import json
-import urllib.parse
-from django.http import JsonResponse
-
-from django.contrib.auth.models import User
-from django.contrib.auth import login as django_admin_login
 import random
 import time
-from django.core.mail import send_mail
+import urllib.parse
+import threading
+import requests
+
+from django.shortcuts import render, redirect
+from django.db import IntegrityError
+from django.db.models import Q
+from django.http import JsonResponse, StreamingHttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.contrib.auth import login as django_admin_login
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
-import threading
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
+
+from .models import Customer, Drink, Snacks, Order_data
+from .chat import ask_bot
 from shop.tokens import token_generator
-import requests
-import os
 from shop.recommendations.dataset import update_dataset
 from shop.recommendations.predict import get_ml_recommendations
 
@@ -520,9 +518,7 @@ def order(request):
         return redirect("payment")
 
     return render(request, "order.html")
-from django.http import StreamingHttpResponse
 
-@csrf_exempt
 
 @csrf_exempt
 def update_cart(request):
