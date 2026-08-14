@@ -1,35 +1,22 @@
 // ---------- AUTHENTICATION & CART STORAGE ----------
 let cart = [];
-if (typeof IS_LOGGED_IN !== 'undefined') {
-    if (IS_LOGGED_IN) {
-        cart = SERVER_CART || [];
-    } else {
-        const cartCookie = getCookie("guest_cart");
-        if (cartCookie) {
-            try {
-                cart = JSON.parse(cartCookie);
-            } catch (e) {
-                cart = [];
-            }
-        }
-    }
+// ALWAYS use SERVER_CART if injected (which it will be for both guests and logged-in users)
+if (typeof SERVER_CART !== 'undefined') {
+    cart = SERVER_CART || [];
 } else {
     cart = JSON.parse(localStorage.getItem("cart")) || [];
 }
 
 function saveCart() {
-    if (typeof IS_LOGGED_IN !== 'undefined' && IS_LOGGED_IN) {
-        fetch("/update_cart/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: JSON.stringify(cart)
-        }).catch(err => console.error("Cart sync failed:", err));
-    } else {
-        document.cookie = "guest_cart=" + encodeURIComponent(JSON.stringify(cart)) + "; path=/;";
-    }
+    // ALWAYS send cart updates to the server via AJAX (Django handles guest vs logged-in sessions)
+    fetch("/update_cart/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify(cart)
+    }).catch(err => console.error("Cart sync failed:", err));
 }
 
 // Update cart count when page loads
@@ -520,9 +507,9 @@ function createClickParticles(x, y) {
 
 /* -- ITEM DETAIL MODAL -- */
 function showItemDetail(name, price, desc, icon) {
-    document.getElementById('item-modal-icon').innerText = icon || '??';
+    document.getElementById('item-modal-icon').innerText = icon || '☕';
     document.getElementById('item-modal-title').innerText = name;
-    document.getElementById('item-modal-price').innerText = '?' + price;
+    document.getElementById('item-modal-price').innerText = '₹' + price;
     document.getElementById('item-modal-desc').innerText = desc || 'Enjoy our delicious ' + name + '!';
     
     const addBtn = document.getElementById('item-modal-add-btn');

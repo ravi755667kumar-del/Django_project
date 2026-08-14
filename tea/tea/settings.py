@@ -153,8 +153,7 @@ CACHES = {
     }
 }
 
-# Session Configuration (Strict persistent login valid for 2 days = 172800 seconds)
+# Session Configuration (Logout on browser close or explicit logout)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 172800  # 2 days in seconds (48 hours)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Persist across browser reopens for 2 days
-SESSION_SAVE_EVERY_REQUEST = False  # Requires re-authentication after 2 days from login
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Logs out when the browser is closed
+SESSION_SAVE_EVERY_REQUEST = True

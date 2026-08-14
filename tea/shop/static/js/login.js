@@ -42,6 +42,28 @@ document.addEventListener('click', function(e) {
 // ==========================================
 document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', function(e) {
+        
+        // --- Custom Email Spelling Check for Signup Form ---
+        if (form.id === 'signupForm') {
+            const emailInput = document.getElementById('signupEmail');
+            if (emailInput && emailInput.value) {
+                const email = emailInput.value.toLowerCase();
+                // Check for common gmail typos
+                if (/@(gamil\.com|gmal\.com|gmail\.con|gmai\.com|gmail\.co|gamil\.con)$/.test(email)) {
+                    e.preventDefault();
+                    alert("It looks like there's a typo in your email domain (e.g., @gmail.com). Please fix it before sending the OTP.");
+                    emailInput.focus();
+                    return; // Stop form submission
+                }
+                
+                // Hide email text and change background color when processing
+                emailInput.style.color = 'transparent';
+                emailInput.style.backgroundColor = '#e0f7fa'; // light cyan color
+                emailInput.style.transition = 'background-color 0.3s ease';
+            }
+        }
+        // ---------------------------------------------------
+
         e.preventDefault();
 
         const btn = form.querySelector('button[type="submit"]');

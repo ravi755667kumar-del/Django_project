@@ -1,16 +1,4 @@
 customer,item_name,price,quantity,mobile,date,time,city,weather,category,temperature,humidity
-mahadesh,Cardamom Tea,50.0,1,1234562443,2026-08-05,23:29:01.728721,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Ginger Tea,135.0,3,1234562443,2026-08-05,23:29:01.736145,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cardamom Tea,50.0,1,6563524412,2026-08-06,00:30:36.102061,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Tulsi Tea,45.0,1,4254356562,2026-08-06,00:38:42.733810,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Green Tea,60.0,1,4254356562,2026-08-06,00:38:42.745146,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cheese Sandwich,120.0,1,4254356562,2026-08-06,00:38:42.754927,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,French Fries,100.0,1,4254356562,2026-08-06,00:38:42.761015,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cheese Pizza,500.0,2,3435435242,2026-08-06,00:52:50.746773,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Paneer Burger,180.0,1,3435435242,2026-08-06,00:52:50.768935,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,French Fries,100.0,1,3435435242,2026-08-06,00:52:50.780130,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cardamom Tea,50.0,1,4245243434,2026-08-06,06:30:55.769878,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cardamom Tea,50.0,1,3364626373,2026-08-06,08:07:25.464002,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,French Fries,100.0,1,3364626373,2026-08-06,08:07:25.486593,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Cardamom Tea,50.0,1,3423543535,2026-08-06,02:51:51.211317,Thoothukudi,Clouds,Normal,32.61,52
-mahadesh,Ginger Tea,45.0,1,3423543535,2026-08-06,02:51:51.219572,Thoothukudi,Clouds,Normal,32.61,52
+ravi kumar,Cardamom Tea,50.0,1,3415454325,2026-08-14,11:30:13.166459,Thoothukudi,Clouds,Normal,36.16,41
+ravi kumar,Ginger Tea,45.0,1,3415454325,2026-08-14,11:30:13.177092,Thoothukudi,Clouds,Normal,36.16,41
+ravi kumar,Thai Iced Tea,90.0,1,3415454325,2026-08-14,11:30:13.189316,Thoothukudi,Clouds,Normal,36.16,41

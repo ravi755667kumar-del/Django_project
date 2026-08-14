@@ -18,7 +18,9 @@
         <!-- ── Header overlaid on top of the image ── -->
         <header class="lp-header">
             <div class="logo">
-                <img src="{% static 'images/header_green.jpg' %}" alt="Tea Brewan Logo" width="80" height="80">
+                <a href="{% url 'login' %}" style="display:inline-block;">
+                    <img src="{% static 'images/header_green.jpg' %}" alt="Tea Brewan Logo" width="80" height="80">
+                </a>
             </div>
             <nav id="main-nav">
                 <a href="{% url 'menu' %}#about-section">About</a>
@@ -161,6 +163,11 @@
             <p>New here? <span onclick="switchAuthForm('signup-section')">Create an Account</span></p>
         </div>
         
+        {% if success_message %}
+        <div class="success-msg" style="color:#2ecc71; text-align:center; margin-top:10px; font-size:14px; padding:8px; background:#e8f8f5; border-radius:8px;">
+            ✅ {{ success_message }}
+        </div>
+        {% endif %}
         {% if messages %}
             {% for message in messages %}
                 {% if 'login_success' in message.tags %}

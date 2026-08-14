@@ -217,7 +217,10 @@ def login(request):
 
                 # Clean session and log in
                 del request.session['temp_user']
-                request.session.flush()
+                old_cart = request.session.get("cart_data")
+
+                if old_cart:
+                    request.session["cart_data"] = old_cart
                 request.session["customer_id"]   = customer.id
                 request.session["customer_name"] = customer.name
                 return _handle_login_success(request)
@@ -240,7 +243,7 @@ def login(request):
             ).first()
             if admin_user and admin_user.check_password(password):
                 django_admin_login(request, admin_user)
-                request.session.set_expiry(172800)  # Valid for 2 days
+                request.session.set_expiry(0)  # Expire on browser close
                 return redirect("/admin/")
 
             try:
@@ -249,7 +252,11 @@ def login(request):
                 # Verify password with hash
                 if check_password(password, customer.password):
                     # Save session
-                    request.session.flush()
+                    old_cart = request.session.get("cart_data")
+
+                    
+                    if old_cart:
+                        request.session["cart_data"] = old_cart
                     request.session["customer_id"]   = customer.id
                     request.session["customer_name"] = customer.name
                     return _handle_login_success(request)
@@ -259,7 +266,9 @@ def login(request):
                     customer.password = make_password(password)
                     customer.save()
                     
-                    request.session.flush()
+                    old_cart = request.session.get("cart_data")
+                    if old_cart:
+                        request.session["cart_data"] = old_cart
                     request.session["customer_id"]   = customer.id
                     request.session["customer_name"] = customer.name
                     return _handle_login_success(request)
@@ -279,22 +288,14 @@ def login(request):
 
 
 def _handle_login_success(request):
-    # Set session database expiry to 2 days (172800 seconds)
-    request.session.set_expiry(172800)
-    
-    guest_cart = request.COOKIES.get("guest_cart")
-    if guest_cart:
-        try:
-            decoded = urllib.parse.unquote(guest_cart)
-            # Store in session
-            request.session["cart_data"] = decoded
-        except Exception:
-            pass
-            
-    response = redirect("menu")
-    if guest_cart:
-        response.delete_cookie("guest_cart")
-    return response
+    # Ensure the session actually exists in the database to prevent UpdateError
+    # This avoids using flush, clear, delete, or cycle_key which can cause issues.
+    if not request.session.session_key or not request.session.exists(request.session.session_key):
+        request.session.create()
+        
+    # Set session database expiry to 0 (Expires when browser closes)
+    request.session.set_expiry(0)
+    return redirect("menu")
 
 def logout_view(request):
     request.session.flush()
