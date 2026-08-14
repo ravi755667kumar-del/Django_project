@@ -26,9 +26,13 @@ def _get_retriever():
                 "Please run: python shop/build_index.py"
             )
 
+        # Save cache inside the project directory so Render doesn't delete it
+        cache_path = str(VECTOR_DB_PATH.parent.parent / "fastembed_cache")
+        
         # FastEmbed: ONNX-based, no PyTorch, ~20MB RAM, no API token needed
         embedding = FastEmbedEmbeddings(
-            model_name="BAAI/bge-small-en-v1.5"
+            model_name="BAAI/bge-small-en-v1.5",
+            cache_dir=cache_path
         )
 
         db = Chroma(

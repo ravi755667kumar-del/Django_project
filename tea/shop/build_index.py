@@ -77,8 +77,13 @@ print(f"Total chunks created across all documents: {len(chunks)}")
 # Load FastEmbed (ONNX-based — no PyTorch, ~20MB RAM)
 # ==========================
 print("\nLoading FastEmbed model (BAAI/bge-small-en-v1.5 via ONNX)...")
+
+# Save cache inside the project directory so Render doesn't delete it
+cache_path = str(PROJECT_DIR / "fastembed_cache")
+
 embedding = FastEmbedEmbeddings(
-    model_name="BAAI/bge-small-en-v1.5"
+    model_name="BAAI/bge-small-en-v1.5",
+    cache_dir=cache_path
 )
 print("FastEmbed model ready!")
 
