@@ -252,9 +252,15 @@ function getCookie(name) {
 
 async function sendMessage() {
     const input = document.getElementById("userMessage");
-    const message = input.value.trim();
+    if (input.disabled) return; // Prevent double sending
 
+    const message = input.value.trim();
     if (message === "") return;
+
+    // Disable input while waiting for AI response
+    input.disabled = true;
+    const originalPlaceholder = input.placeholder;
+    input.placeholder = "Generating answer...";
 
     const chatBox = document.getElementById("chat-box");
     chatBox.innerHTML += `<div class="user-message">${message}</div>`;
@@ -313,6 +319,11 @@ async function sendMessage() {
         const typingEl = document.getElementById("typing");
         if (typingEl) typingEl.remove();
         chatBox.innerHTML += `<div class="bot-message" style="color: red;">🤖 Connection error.</div>`;
+    } finally {
+        // Re-enable input once response is complete
+        input.disabled = false;
+        input.placeholder = originalPlaceholder;
+        input.focus();
     }
 }
 
