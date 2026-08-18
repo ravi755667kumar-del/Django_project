@@ -25,8 +25,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-OPENAI_API_KEY = os.getenv("OPEN_API_KEY", os.getenv("OPENAI_API_KEY"))
-LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+LLM_MODEL = os.getenv("LLM_MODEL", "openai/gpt-oss-20b")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
